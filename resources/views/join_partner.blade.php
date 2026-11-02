@@ -80,9 +80,7 @@
     <!-- HERO SECTION -->
     <header id="hero-partner">
         <div class="hero-partner-inner">
-            <div class="hero-badge reveal">
-                <i class="bi bi-people-fill"></i> Kemitraan Komunitas &amp; Store Regional
-            </div>
+           
             <h1 class="hero-title reveal" style="transition-delay: .1s;">
                 Buka Hub E-Commerce Komunitas Anda<br>
                 <span class="grad-text">100% Gratis Tanpa Biaya Server</span>
@@ -120,7 +118,7 @@
     <section id="kelebihan" class="section-wrap alt">
         <div class="container-custom">
             <div class="section-header centered reveal">
-                <div class="section-tag"><i class="bi bi-star-fill"></i> Mengapa Join Partner?</div>
+               
                 <h2 class="section-title">Solusi All-in-One untuk <span class="highlight">Komunitas Anda</span></h2>
                 <p class="section-subtitle">Dukung penuh para kreator dan seller digital lokal di komunitas Anda dengan menyediakan marketplace resmi yang kredibel.</p>
             </div>
@@ -163,7 +161,7 @@
     <section id="showcase" class="section-wrap">
         <div class="container-custom">
             <div class="section-header centered reveal">
-                <div class="section-tag"><i class="bi bi-globe-americas"></i> Subdomain Khusus</div>
+                
                 <h2 class="section-title">Contoh Identitas Toko <span class="highlight">Komunitas Anda</span></h2>
                 <p class="section-subtitle">Setiap partner komunitas akan mendapatkan alamat website khusus dengan subdomain yang disesuaikan secara cuma-cuma.</p>
             </div>
@@ -196,7 +194,7 @@
     <section id="roles" class="section-wrap alt">
         <div class="container-custom">
             <div class="section-header centered reveal">
-                <div class="section-tag"><i class="bi bi-briefcase-fill"></i> Tugas &amp; Peran</div>
+                
                 <h2 class="section-title">Bagaimana Peran <span class="highlight">Mitra Partner</span>?</h2>
                 <p class="section-subtitle">Sebagai mitra, Anda bertindak sebagai penggerak utama ekosistem digital di komunitas Anda.</p>
             </div>
@@ -225,7 +223,7 @@
         <div class="container-custom">
             <div class="revenue-wrap">
                 <div class="reveal">
-                    <div class="section-tag"><i class="bi bi-percent"></i> Skema Pembagian Hasil</div>
+                   
                     <h2 class="section-title" style="font-size: 2.2rem;">Sistem Bagi Hasil <span class="highlight">Komisi Otomatis</span></h2>
                     <p style="color:var(--text-muted); margin-bottom: 24px; line-height: 1.7;">
                         Kemitraan ini didesain 100% gratis tanpa biaya bulanan. Pendapatan Anda bersumber langsung dari persentase komisi transaksi yang dilakukan oleh seller di website komunitas Anda.
@@ -280,7 +278,7 @@
     <section id="faq" class="section-wrap alt">
         <div class="container-custom">
             <div class="section-header centered reveal">
-                <div class="section-tag"><i class="bi bi-question-circle-fill"></i> Tanya Jawab</div>
+                
                 <h2 class="section-title">Pertanyaan Seputar <span class="highlight">Join Partner</span></h2>
                 <p class="section-subtitle">Pelajari seluk-beluk program kemitraan komunitas store dan cara memulai kolaborasi bersama kami.</p>
             </div>
@@ -329,7 +327,7 @@
     <section id="register" class="section-wrap">
         <div class="container-custom">
             <div class="glass-card registration-box reveal">
-                <div class="section-tag" style="margin-bottom: 16px;"><i class="bi bi-send-fill"></i> Pendaftaran Kemitraan</div>
+                
                 <h2>Mulai Hub E-Commerce Komunitas Anda Sekarang</h2>
                 <p>Diskusikan pendaftaran kemitraan komunitas store Anda bersama tim representatif dari {{ $siteName }}. Hubungi kami melalui salah satu kontak di bawah ini.</p>
                 <div class="action-buttons">

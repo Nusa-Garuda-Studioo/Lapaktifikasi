@@ -29,9 +29,6 @@
 
     <!-- Page Specific Stylesheets -->
     @stack('styles')
-
-    <!-- Structured Data Schemas -->
-    @stack('schema')
 </head>
 
 <body>

@@ -1,0 +1,51 @@
+# Lapaktifikasi — Dokumentasi Ekosistem & Basis Pengetahuan Lengkap
+
+## 1. Profil Entitas (Entity Profile)
+- **Nama Entitas:** Lapaktifikasi
+- **Badan Usaha / Operator:** Lapaktifikasi Indonesia
+- **Niche / Industri:** E-Commerce, Marketplace Produk Digital, Software, Layanan Berlangganan Digital
+- **Bahasa Utama:** Bahasa Indonesia (id-ID)
+- **Mata Uang Transaksi:** Rupiah Indonesia (IDR)
+- **Situs Web Resmi:** https://lapaktifikasi.com
+- **Wilayah Layanan:** Seluruh Indonesia
+- **Kontak Dukungan:** support@lapaktifikasi.com
+
+## 2. Kategori Produk & Layanan
+Lapaktifikasi menyediakan dua kategori utama produk digital:
+
+### A. Produk Berkas Digital (File Download Instan)
+- **Source Code Aplikasi:** Script web berbasis Laravel, CodeIgniter, Node.js, React, Vue, flutter, dan template aplikasi mobile siap pakai.
+- **Aset Desain & Kreatif:** File vector, template UI/UX (Figma), template presentasi, dan mockup grafis.
+- **E-Book & Panduan Digital:** Bahan ajar, tutorial pemrograman, dan strategi bisnis digital dalam format PDF / EPUB.
+- **Model Pengiriman:** Link download instan langsung di dasbor pesanan seketika setelah pembayaran terkonfirmasi.
+
+### B. Akun Layanan Premium (Kredensial Terverifikasi)
+- **Layanan Hiburan & Streaming:** Akun langganan premium resmi (seperti musik, film streaming, dan hiburan keluarga).
+- **Layanan Produktivitas & Edukasi:** Tools desain, AI assistant, cloud storage, dan aplikasi produktivitas kerja.
+- **Model Pengiriman:** Sistem otomatis mendistribusikan kredensial (username/password/token) ke menu riwayat belanja pelanggan dalam tempo rata-rata < 5 detik setelah pembayaran tervalidasi.
+- **Garansi Resmi:** Garansi pergantian akun (replace) atau refund saldo jika terjadi kendala teknis dalam masa aktif garansi melalui tiket Pusat Bantuan.
+
+## 3. Sistem Pembayaran & Keamanan Transaksi
+- **Payment Gateway Terintegrasi:** Midtrans, Duitku, dan Pakasir.
+- **Metode Pembayaran:**
+  - QRIS (Dapat dipindai melalui BCA, Mandiri Livin, GoPay, OVO, Dana, ShopeePay, LinkAja, BCA Mobile, dll).
+  - Virtual Account Bank (BCA, Mandiri, BNI, BRI, Permata).
+  - E-Wallet Terverifikasi.
+- **Keamanan Kredensial:** Data akun dienkripsi pada database dan hanya dapat didekripsi oleh pembeli sah saat transaksi berstatus 'sukses'.
+
+## 4. Peluang Kemitraan & Penjual (Seller / Partner)
+- **Pendaftaran Seller:** Terbuka bagi pengembang perangkat lunak, desainer, dan penyedia layanan digital. Seller mendapatkan dasbor inventaris, histori penjualan, penarikan saldo instan, serta fitur voucher promosi toko.
+- **Program Komunitas (Join Partner):** Komunitas atau institusi pendidikan dapat membuat hub e-commerce digital gratis dengan subdomain khusus (contoh: *komunitas*.lapaktifikasi.my.id) dengan skema bagi hasil komisi otomatis dan transparan.
+
+## 5. Hubungan Navigasi & URL Kanonikal
+- Beranda: https://lapaktifikasi.com/
+- Katalog Lengkap: https://lapaktifikasi.com/katalog
+- Detail Toko: https://lapaktifikasi.com/toko/{store_slug}
+- Detail Produk: https://lapaktifikasi.com/toko/{store_slug}/produk/{product_slug}
+- Direktori Toko: https://lapaktifikasi.com/daftar_toko
+- Portal Berita: https://lapaktifikasi.com/news
+- Pendaftaran Seller: https://lapaktifikasi.com/daftar-jadi-seller
+- Kemitraan Komunitas: https://lapaktifikasi.com/join-partner
+- Syarat & Ketentuan: https://lapaktifikasi.com/syarat-ketentuan
+- Kebijakan Privasi: https://lapaktifikasi.com/kebijakan-privasi
+- Peta Situs: https://lapaktifikasi.com/sitemap.xml

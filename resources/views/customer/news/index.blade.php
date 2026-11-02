@@ -1,9 +1,38 @@
 @extends('layout')
 
-@section('title', 'Berita & Informasi')
+@section('title', 'Berita & Informasi Terbaru')
+@section('meta_title', 'Berita, Panduan & Edukasi Digital - Lapaktifikasi')
+@section('meta_description', 'Pusat berita resmi, tips teknologi, tutorial produk digital, update akun premium, dan pengumuman promo spesial dari Lapaktifikasi.')
+@section('meta_keywords', 'berita lapaktifikasi, tips produk digital, panduan akun premium, promo digital, berita teknologi, update marketplace')
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/pages/customer-news.css') }}">
+@endpush
+
+@push('schema')
+<script type="application/ld+json">
+{
+  "{{ '@context' }}": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "Berita & Informasi Lapaktifikasi",
+  "description": "Kumpulan artikel, panduan, dan berita seputar produk digital dan akun premium.",
+  "url": "{{ url('/news') }}",
+  "mainEntity": {
+    "@type": "ItemList",
+    "name": "Daftar Berita Terbaru Lapaktifikasi",
+    "itemListElement": [
+      @foreach($newsList->take(20) as $index => $item)
+      {
+        "@type": "ListItem",
+        "position": {{ $index + 1 }},
+        "name": {!! json_encode($item->judul) !!},
+        "url": "{{ route('news.show', $item->slug) }}"
+      }@if(!$loop->last),@endif
+      @endforeach
+    ]
+  }
+}
+</script>
 @endpush
 
 @section('content')

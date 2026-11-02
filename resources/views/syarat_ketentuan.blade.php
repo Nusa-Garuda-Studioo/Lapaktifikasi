@@ -8,6 +8,29 @@
     <link rel="stylesheet" href="{{ asset('css/pages/legal.css') }}">
 @endpush
 
+@push('schema')
+<script type="application/ld+json">
+{
+  "{{ '@context' }}": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Beranda",
+      "item": "{{ url('/') }}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Syarat & Ketentuan",
+      "item": "{{ url('/syarat-ketentuan') }}"
+    }
+  ]
+}
+</script>
+@endpush
+
 @section('content')
     <!-- HEADER -->
     <header class="page-header">

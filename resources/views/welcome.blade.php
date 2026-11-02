@@ -10,6 +10,28 @@
 @endpush
 
 @push('schema')
+<!-- Schema.org OnlineStore Structured Data -->
+<script type="application/ld+json">
+{
+  "{{ '@context' }}": "https://schema.org",
+  "@type": "OnlineStore",
+  "name": "{{ isset($websiteSettings) && $websiteSettings->site_name ? $websiteSettings->site_name : 'Lapaktifikasi' }}",
+  "url": "{{ url('/') }}",
+  "description": "Marketplace Produk Digital, Source Code Aplikasi & Akun Layanan Premium Bergaransi Resmi.",
+  "currenciesAccepted": "IDR",
+  "paymentAccepted": "QRIS, Bank Transfer, Virtual Account, GoPay, OVO, Dana, ShopeePay",
+  "priceRange": "Rp 5.000 - Rp 1.500.000",
+  "hasMerchantReturnPolicy": {
+    "@type": "MerchantReturnPolicy",
+    "applicableCountry": "ID",
+    "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+    "merchantReturnDays": 30,
+    "returnMethod": "https://schema.org/ReturnOnline",
+    "returnFees": "https://schema.org/FreeReturn"
+  }
+}
+</script>
+
 <!-- Schema.org FAQPage Structured Data (Google Rich Results SERP) -->
 <script type="application/ld+json">
 {
@@ -58,7 +80,7 @@
     <header id="hero">
         <div class="hero-inner">
             <div class="hero-content">
-                <div class="hero-badge"><i class="bi bi-patch-check-fill"></i> Platform Ekosistem Digital &amp; Kreatif Terpercaya</div>
+                <!-- <div class="hero-badge"><i class="bi bi-patch-check-fill"></i> Platform Ekosistem Digital &amp; Kreatif Terpercaya</div> -->
                 <h1 class="hero-title">Marketplace Produk Digital &amp;<br><span class="grad-text">AKUN PREMIUM TERPERCAYA</span></h1>
                 <p class="hero-desc">Pusat Marketplace Produk Digital &amp; Akun Premium Terpercaya. Platform terdepan yang menyediakan aneka source code aplikasi, file kreatif, e-book berkualitas, serta akun premium terverifikasi dengan sistem otomatis instan 24/7 dan bergaransi resmi.</p>
                 <div class="hero-cta">
@@ -79,12 +101,12 @@
                             Akun Gratis</a>
                     @endauth
                 </div>
-                <div class="hero-trust">
+                <!-- <div class="hero-trust">
                     <div class="trust-item"><i class="bi bi-check-circle-fill"></i> Akun Premium &amp; File Digital
                     </div>
                     <div class="trust-item"><i class="bi bi-check-circle-fill"></i> Download ZIP / File Instan</div>
                     <div class="trust-item"><i class="bi bi-check-circle-fill"></i> Pembayaran QRIS &amp; Bank</div>
-                </div>
+                </div> -->
             </div>
             <div class="hero-visual">
                 <div class="hero-3card-container">
@@ -205,7 +227,7 @@
     <section id="fitur" class="section-wrap">
         <div class="container-custom">
             <div class="section-header centered">
-                <div class="section-tag"><i class="bi bi-stars"></i> Kelebihan Kami</div>
+                
                 <h2 class="section-title">Mengapa <span class="highlight">Lapaktifikasi</span>?</h2>
                 <p class="section-subtitle">Platform kami dirancang dengan teknologi terkini untuk memastikan pengalaman
                     belanja yang cepat, aman, dan memuaskan.</p>
@@ -256,7 +278,7 @@
     <section id="visimisi" class="section-wrap alt" style="padding: 90px 5%;">
         <div class="container-custom">
             <div class="section-header centered mb-12">
-                <div class="section-tag"><i class="bi bi-eye-fill"></i> Visi &amp; Komitmen</div>
+              
                 <h2 class="section-title">Visi &amp; Misi <span class="highlight-cyan">Lapaktifikasi</span></h2>
                 <p class="section-subtitle">Lapaktifikasi berkomitmen membangun ekosistem digital terpercaya yang memberdayakan kreator, developer, dan talenta muda berbakat untuk menggerakkan potensi ekonomi kreatif di Indonesia.
                 </p>
@@ -341,7 +363,7 @@
     <section id="cara-kerja" class="section-wrap">
         <div class="container-custom">
             <div class="section-header centered">
-                <div class="section-tag"><i class="bi bi-diagram-3-fill"></i> Cara Kerja</div>
+               
                 <h2 class="section-title">Transaksi Semudah <span class="highlight">4 Langkah</span></h2>
                 <p class="section-subtitle">Proses belanja cepat dan sederhana — dari memilih file digital / akun hingga
                     mengunduh langsung di akun Anda.</p>
@@ -379,7 +401,7 @@
     <section id="produk" class="section-wrap alt">
         <div class="container-custom">
             <div class="section-header centered">
-                <div class="section-tag"><i class="bi bi-grid-fill"></i> Produk &amp; Layanan</div>
+                
                 <h2 class="section-title">Kategori Produk <span class="highlight">Digital Kami</span></h2>
                 <p class="section-subtitle">Temukan berbagai ragam produk digital terlengkap — dari aplikasi premium
                     hingga karya file digital buatan creator &amp; siswa.</p>
@@ -468,8 +490,7 @@
             <div class="jasa-cta-box reveal">
                 <div class="row align-items-center" style="display: flex; flex-wrap: wrap; gap: 30px;">
                     <div style="flex: 1; min-width: 280px;">
-                        <div class="section-tag" style="background: #000; color: #fff;"><i class="bi bi-code-slash"></i>
-                            Jasa Pembuatan Website &amp; Software</div>
+                        
                         <h2
                             style="font-family: 'Space Grotesk', sans-serif; font-size: clamp(1.6rem, 3.5vw, 2.5rem); font-weight: 700; color: #000; margin-bottom: 16px;">
                             Mau Memiliki Website Marketplace / Portal Digital Seperti Ini?
@@ -498,7 +519,7 @@
     <section id="testimoni" class="section-wrap alt" style="overflow: hidden;">
         <div class="container-custom" style="margin-bottom: 40px;">
             <div class="section-header centered">
-                <div class="section-tag"><i class="bi bi-chat-quote-fill"></i> Testimoni</div>
+                
                 <h2 class="section-title">Kata Mereka yang <span class="highlight">Sudah Merasakan</span></h2>
                 <p class="section-subtitle">Ribuan pelanggan &amp; seller telah merasakan kemudahan bertransaksi file
                     digital dan akun premium di Lapaktifikasi.</p>
@@ -556,8 +577,7 @@
         <div class="container-custom">
             <div class="vm-grid">
                 <div class="hero-content reveal">
-                    <div class="section-tag"><i class="bi bi-people-fill"></i> Program Kemitraan Komunitas &amp; Sekolah
-                    </div>
+                    
                     <h2 class="section-title">Website Toko Komunitas <span class="highlight">100% Gratis</span></h2>
                     <p class="hero-desc" style="margin-bottom:28px;">
                         Miliki platform e-commerce produk digital khusus untuk komunitas atau sekolah Anda secara gratis
@@ -583,8 +603,8 @@
                         <div class="card-header-row">
                             <span style="font-weight:700;font-size:1.1rem;font-family:'Space Grotesk',sans-serif;"><i
                                     class="bi bi-rocket-takeoff-fill"></i> Kemitraan Komunitas</span>
-                            <span class="card-badge-live"
-                                style="background:rgba(0,0,0,0.05); color:#000000; border-color:#000000;">Gratis</span>
+                            <!-- <span class="card-badge-live"
+                                style="background:rgba(0,0,0,0.05); color:#000000; border-color:#000000;">Gratis</span> -->
                         </div>
                         <div class="product-row">
                             <div class="product-icon"><i class="bi bi-globe"></i></div>
@@ -617,7 +637,7 @@
     <section id="faq" class="section-wrap">
         <div class="container-custom">
             <div class="section-header centered">
-                <div class="section-tag"><i class="bi bi-question-circle-fill"></i> FAQ</div>
+               
                 <h2 class="section-title">Pertanyaan yang <span class="highlight">Sering Ditanyakan</span></h2>
                 <p class="section-subtitle">Temukan jawaban atas pertanyaan umum seputar layanan dan cara penggunaan
                     Lapaktifikasi.</p>
@@ -637,7 +657,7 @@
                         menerima akun setelah pembayaran? <i class="bi bi-plus-lg faq-icon"></i></button>
                     <div class="faq-answer">
                         <p>Sistem kami memproses pengiriman secara otomatis. Setelah pembayaran Anda dikonfirmasi oleh
-                            Midtrans, kredensial akun akan langsung tersedia di halaman riwayat belanja dalam hitungan
+                            Payment Gateway, kredensial akun akan langsung tersedia di halaman riwayat belanja dalam hitungan
                             detik — umumnya kurang dari 5 detik.</p>
                     </div>
                 </div>
@@ -645,9 +665,9 @@
                     <button class="faq-question" onclick="toggleFaq(this)">Metode pembayaran apa saja yang tersedia? <i
                             class="bi bi-plus-lg faq-icon"></i></button>
                     <div class="faq-answer">
-                        <p>Kami menyediakan berbagai metode pembayaran melalui Midtrans, termasuk transfer bank (BCA,
-                            BNI, BRI, Mandiri), e-wallet (GoPay, OVO, Dana, ShopeePay), QRIS, virtual account, dan
-                            Alfamart/Indomaret. Semua transaksi diproses secara aman dan otomatis.</p>
+                        <p>Kami menyediakan berbagai metode pembayaran terverifikasi termasuk QRIS instan, transfer bank (BCA,
+                            BNI, BRI, Mandiri), e-wallet (GoPay, OVO, Dana, ShopeePay), dan Virtual Account melalui 3 payment
+                            gateway terpercaya (Midtrans, Duitku, Pakasir). Semua transaksi diproses secara aman dan serba otomatis 24/7.</p>
                     </div>
                 </div>
                 <div class="faq-item reveal" style="transition-delay:.24s">
@@ -655,8 +675,7 @@
                         bermasalah? <i class="bi bi-plus-lg faq-icon"></i></button>
                     <div class="faq-answer">
                         <p>Kepuasan pelanggan adalah prioritas kami. Jika Anda mengalami masalah dengan akun yang
-                            dibeli, segera hubungi tim dukungan kami dan kami akan menindaklanjuti dengan cepat sesuai
-                            kebijakan garansi yang berlaku.</p>
+                            dibeli, segera hubungi tim dukungan kami melalui WhatsApp atau menu Laporan/Pusat Bantuan, dan kami akan memberikan garansi replace (ganti baru) atau refund sesuai ketentuan.</p>
                     </div>
                 </div>
                 <div class="faq-item reveal" style="transition-delay:.32s">

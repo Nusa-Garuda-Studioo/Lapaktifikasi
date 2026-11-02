@@ -1,6 +1,35 @@
 @extends('layout')
 
-@section('title', 'Daftar Toko Marketplace')
+@section('title', 'Direktori Toko & Seller Terverifikasi')
+@section('meta_title', 'Direktori Toko & Seller Terverifikasi - Lapaktifikasi')
+@section('meta_description', 'Temukan toko seller digital resmi dan terverifikasi di Lapaktifikasi. Beli source code aplikasi, produk kreatif, dan akun premium dari penjual terpercaya dengan garansi resmi.')
+@section('meta_keywords', 'daftar toko, direktori seller, marketplace digital, beli source code, akun premium, seller terverifikasi, toko lapaktifikasi')
+
+@push('schema')
+<script type="application/ld+json">
+{
+  "{{ '@context' }}": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "Direktori Toko & Seller Terverifikasi Lapaktifikasi",
+  "description": "Daftar toko resmi dan penjual terverifikasi di marketplace Lapaktifikasi.",
+  "url": "{{ url('/daftar_toko') }}",
+  "mainEntity": {
+    "@type": "ItemList",
+    "name": "Daftar Toko Resmi Lapaktifikasi",
+    "itemListElement": [
+      @foreach($shops->take(30) as $index => $shop)
+      {
+        "@type": "ListItem",
+        "position": {{ $index + 1 }},
+        "name": {!! json_encode($shop->nama_toko) !!},
+        "url": "{{ url('/toko/' . ($shop->slug ?: 'store')) }}"
+      }@if(!$loop->last),@endif
+      @endforeach
+    ]
+  }
+}
+</script>
+@endpush
 
 @section('content')
 

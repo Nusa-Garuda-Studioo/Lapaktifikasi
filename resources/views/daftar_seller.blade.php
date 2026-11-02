@@ -77,9 +77,7 @@
     <!-- HERO SECTION -->
     <header id="hero-seller">
         <div class="hero-seller-inner">
-            <div class="hero-badge reveal">
-                <i class="bi bi-patch-check-fill"></i> Program Seller Resmi {{ $siteName }}
-            </div>
+           
             <h1 class="hero-title reveal" style="transition-delay: .1s;">
                 Raih Penghasilan Maksimal dari<br>
                 <span class="grad-text">Produk Digital &amp; Akun Premium</span>
@@ -117,7 +115,7 @@
     <section id="kelebihan" class="section-wrap alt">
         <div class="container-custom">
             <div class="section-header centered reveal">
-                <div class="section-tag"><i class="bi bi-lightning-charge-fill"></i> Mengapa Berjualan di Sini?</div>
+                
                 <h2 class="section-title">Infrastruktur Unggul untuk <span class="highlight">Bisnis Digital Anda</span></h2>
                 <p class="section-subtitle">Kami sediakan seluruh teknologi backend, gerbang pembayaran, hingga perlindungan garansi agar Anda bisa fokus memproduksi produk bermutu.</p>
             </div>
@@ -160,7 +158,7 @@
     <section id="alur" class="section-wrap">
         <div class="container-custom">
             <div class="section-header centered reveal">
-                <div class="section-tag"><i class="bi bi-signpost-2-fill"></i> Proses Mudah</div>
+                
                 <h2 class="section-title">4 Langkah Cepat Menjadi <span class="highlight">Seller Aktif</span></h2>
                 <p class="section-subtitle">Tanpa formulir rumit atau proses birokrasi berbelit. Toko Anda bisa online dan menghasilkan dalam hitungan jam.</p>
             </div>
@@ -193,7 +191,7 @@
     <section id="skema" class="section-wrap alt">
         <div class="container-custom">
             <div class="section-header centered reveal">
-                <div class="section-tag"><i class="bi bi-info-circle-fill"></i> Transparansi Sistem</div>
+                
                 <h2 class="section-title">Infrastruktur &amp; <span class="highlight">Skema Kerjasama</span></h2>
                 <p class="section-subtitle">Informasi penting mengenai skema potongan komisi, integrasi gerbang pembayaran, dan jadwal pemeliharaan server berkala demi keandalan bisnis Anda.</p>
             </div>
@@ -236,7 +234,7 @@
     <section id="faq" class="section-wrap">
         <div class="container-custom">
             <div class="section-header centered reveal">
-                <div class="section-tag"><i class="bi bi-question-circle-fill"></i> Tanya Jawab</div>
+                
                 <h2 class="section-title">Pertanyaan Seputar <span class="highlight">Seller</span></h2>
                 <p class="section-subtitle">Temukan jawaban atas pertanyaan yang paling sering ditanyakan seputar pendaftaran dan pengelolaan toko di {{ $siteName }}.</p>
             </div>
@@ -285,7 +283,7 @@
     <section id="daftar" class="section-wrap alt">
         <div class="container-custom">
             <div class="glass-card registration-box reveal">
-                <div class="section-tag" style="margin-bottom: 16px;"><i class="bi bi-send-fill"></i> Pendaftaran Cepat</div>
+               
                 <h2>Mulai Langkah Sukses Toko Digital Anda</h2>
                 <p>Kami tidak menggunakan formulir yang panjang dan rumit. Hubungi tim kami langsung melalui WhatsApp atau Email untuk pendaftaran instan.</p>
                 <div class="action-buttons">

@@ -1,0 +1,23 @@
+# Lapaktifikasi
+
+> Lapaktifikasi adalah platform marketplace produk digital, source code aplikasi, file kreatif, e-book, dan akun layanan premium terpercaya di Indonesia dengan pengiriman otomatis instan kurang dari 5 detik dan bergaransi resmi.
+
+Lapaktifikasi menghubungkan kreator digital, software engineer, komunitas, dan pembeli secara aman dengan sistem multi-payment gateway (QRIS, Virtual Account, Transfer Bank, E-Wallet) dan enkripsi kredensial otomatis.
+
+## Layanan & Fitur Utama
+
+- [Katalog Produk Digital & Akun Premium](https://lapaktifikasi.com/katalog): Jelajahi katalog source code web/mobile, aset digital, template, dan akun layanan premium bergaransi resmi.
+- [Direktori Toko & Seller Terverifikasi](https://lapaktifikasi.com/daftar_toko): Daftar toko online resmi mitra kreator dan developer di seluruh Indonesia.
+- [Daftar Jadi Seller Resmi](https://lapaktifikasi.com/daftar-jadi-seller): Panduan dan pendaftaran penjual produk digital dengan pencairan saldo instan dan pembagian komisi transparan.
+- [Program Kemitraan Komunitas & Hub](https://lapaktifikasi.com/join-partner): Program pembuatan website toko digital gratis dengan custom subdomain komunitas (contoh: nusabogor.lapaktifikasi.my.id) dan sistem bagi hasil otomatis.
+- [Berita & Pusat Edukasi](https://lapaktifikasi.com/news): Artikel panduan teknologi, tips keamanan akun, panduan instalasi source code, dan info promo terkini.
+
+## Informasi Penting & Legalitas
+
+- [Syarat & Ketentuan](https://lapaktifikasi.com/syarat-ketentuan): Ketentuan transaksi, hak cipta software, garansi pergantian (replace) akun, dan prosedur klaim.
+- [Kebijakan Privasi](https://lapaktifikasi.com/kebijakan-privasi): Komitmen perlindungan data pelanggan, enkripsi token, dan standar keamanan transaksi.
+- [Peta Situs XML](https://lapaktifikasi.com/sitemap.xml): Indeks URL seluruh halaman publik, produk aktif, toko seller, dan artikel berita.
+
+## Detail Dokumen Lengkap
+
+- [Dokumentasi Lengkap LLMs](https://lapaktifikasi.com/llms-full.txt): Ringkasan mendalam tentang spesifikasi teknis platform, integrasi payment gateway, dan tata cara verifikasi garansi.

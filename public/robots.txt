@@ -1,6 +1,6 @@
 # ==========================================
 # Robots.txt for Lapaktifikasi
-# https://lapaktifikasi.com
+# https://lapaktifikasi.id
 # ==========================================
 
 User-agent: *
@@ -12,6 +12,8 @@ Allow: /news/
 Allow: /assets/
 Allow: /css/
 Allow: /storage/
+Allow: /llms.txt
+Allow: /llms-full.txt
 
 # Disallow Private & Admin Areas from Crawlers
 Disallow: /dashboard
@@ -32,6 +34,22 @@ Disallow: /reset_password
 Disallow: /banned
 Disallow: /api/
 
-# Specify Sitemap Location
-Sitemap: http://localhost:8000/sitemap.xml
+# AI Search & Retrieval Crawlers (AEO / GEO Optimization)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# Canonical XML Sitemap & LLMs Knowledge Base
 Sitemap: https://lapaktifikasi.com/sitemap.xml
+# LLMs Text: https://lapaktifikasi.com/llms.txt

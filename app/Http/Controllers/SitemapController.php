@@ -86,12 +86,19 @@ class SitemapController extends Controller
 
                 $lastmod = $product->updated_at ? $product->updated_at->toAtomString() : now()->toAtomString();
 
-                $urls[] = [
+                $itemData = [
                     'loc' => $productUrl,
                     'lastmod' => $lastmod,
                     'changefreq' => 'weekly',
                     'priority' => '0.9'
                 ];
+
+                if (!empty($product->gambar)) {
+                    $itemData['image_loc'] = asset('assets/img/produk_premium/' . $product->gambar);
+                    $itemData['image_title'] = $product->nama_produk;
+                }
+
+                $urls[] = $itemData;
             }
         } catch (\Throwable $e) {
             // Safe fallback if table issue
@@ -119,12 +126,19 @@ class SitemapController extends Controller
             $newsList = News::published()->get();
             foreach ($newsList as $item) {
                 if (!empty($item->slug)) {
-                    $urls[] = [
+                    $itemData = [
                         'loc' => url('/news/' . $item->slug),
                         'lastmod' => $item->updated_at ? $item->updated_at->toAtomString() : now()->toAtomString(),
                         'changefreq' => 'weekly',
                         'priority' => '0.8'
                     ];
+
+                    if (!empty($item->gambar_url)) {
+                        $itemData['image_loc'] = $item->gambar_url;
+                        $itemData['image_title'] = $item->judul;
+                    }
+
+                    $urls[] = $itemData;
                 }
             }
         } catch (\Throwable $e) {
@@ -133,6 +147,7 @@ class SitemapController extends Controller
 
         // Generate XML string
         $xml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+        $xml .= '<!-- LLMs Discovery Knowledge Base: ' . url('/llms.txt') . ' -->' . "\n";
         $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" ' .
                 'xmlns:xhtml="http://www.w3.org/1999/xhtml" ' .
                 'xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">' . "\n";
@@ -148,6 +163,14 @@ class SitemapController extends Controller
             }
             if (!empty($u['priority'])) {
                 $xml .= "    <priority>" . $u['priority'] . "</priority>\n";
+            }
+            if (!empty($u['image_loc'])) {
+                $xml .= "    <image:image>\n";
+                $xml .= "      <image:loc>" . htmlspecialchars($u['image_loc'], ENT_XML1, 'UTF-8') . "</image:loc>\n";
+                if (!empty($u['image_title'])) {
+                    $xml .= "      <image:title>" . htmlspecialchars($u['image_title'], ENT_XML1, 'UTF-8') . "</image:title>\n";
+                }
+                $xml .= "    </image:image>\n";
             }
             $xml .= "  </url>\n";
         }

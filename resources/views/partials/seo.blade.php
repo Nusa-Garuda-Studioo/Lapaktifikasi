@@ -1,10 +1,14 @@
 @php
     $siteName = isset($websiteSettings) && $websiteSettings->site_name ? $websiteSettings->site_name : 'Lapaktifikasi';
     $siteDesc = isset($websiteSettings) && $websiteSettings->site_description ? $websiteSettings->site_description : 'Marketplace Produk Digital, Source Code & Akun Premium Terpercaya Bergaransi Resmi';
-    
+
     $seoTitle = trim($__env->yieldContent('meta_title', $__env->yieldContent('title', '')));
     if (!empty($seoTitle)) {
-        $fullTitle = $seoTitle . ' | ' . $siteName;
+        if (str_contains($seoTitle, $siteName)) {
+            $fullTitle = $seoTitle;
+        } else {
+            $fullTitle = $seoTitle . ' | ' . $siteName;
+        }
     } else {
         $fullTitle = $siteName . ' - ' . $siteDesc;
     }
@@ -17,11 +21,11 @@
 
     $metaKeywords = trim($__env->yieldContent('meta_keywords', 'lapaktifikasi, marketplace produk digital, beli akun premium, source code aplikasi, produk kreatif digital, akun premium murah, sistem otomatis, payment gateway'));
     $canonicalUrl = trim($__env->yieldContent('canonical_url', url()->current()));
-    
+
     $defaultImage = isset($websiteSettings) && $websiteSettings->logo_path ? asset($websiteSettings->logo_path) : asset('assets/img/brand_ambassador.jpg');
     $ogImage = trim($__env->yieldContent('og_image', $defaultImage));
     $ogType = trim($__env->yieldContent('og_type', 'website'));
-    $isPrivateArea = request()->is('dashboard*', 'admin*', 'seller*', 'profile_customer*', 'premium/riwayat*', 'premium/laporan*', 'premium/kredensial*', 'login', 'pendaftaran', 'lupa_password', 'reset_password');
+    $isPrivateArea = request()->is('dashboard*', 'admin*', 'seller*', 'profile_customer*', 'premium/riwayat*', 'premium/laporan*', 'premium/kredensial*', 'login', 'pendaftaran', 'lupa_password', 'reset_password', 'offline*', 'banned*');
     $defaultRobots = $isPrivateArea ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
     $robotsDirective = trim($__env->yieldContent('meta_robots', $defaultRobots));
 @endphp
@@ -69,6 +73,7 @@
       "@type": "Organization",
       "@id": "{{ url('/') }}#organization",
       "name": "{{ $siteName }}",
+      "legalName": "Lapaktifikasi Indonesia",
       "url": "{{ url('/') }}",
       "logo": {
         "@type": "ImageObject",
@@ -91,7 +96,14 @@
         "email": "{{ isset($websiteSettings) && $websiteSettings->contact_email ? $websiteSettings->contact_email : 'support@lapaktifikasi.com' }}",
         "areaServed": "ID",
         "availableLanguage": ["Indonesian", "English"]
-      }
+      },
+      "knowsAbout": [
+        "Marketplace Produk Digital",
+        "Akun Premium Bergaransi",
+        "Source Code Aplikasi & Web",
+        "E-Book & Template Kreatif",
+        "Sistem Pengiriman Otomatis Instan"
+      ]
     },
     {
       "@type": "WebSite",
