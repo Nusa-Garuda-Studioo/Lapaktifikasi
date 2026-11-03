@@ -1,0 +1,879 @@
+/**
+ * Lapaktifikasi - Full Atmosphere Halloween Theme
+ * All styles scoped strictly under body.halloween-theme
+ * Prefixes: halloween- / --halloween- / Halloween...
+ * Non-intrusive additive overlays; pointer-events: none on decorative items.
+ */
+
+:root {
+    /* Halloween Base Palette */
+    --halloween-bg-primary: #0b0914;
+    --halloween-bg-secondary: #120e20;
+    --halloween-bg-card: rgba(22, 17, 36, 0.94);
+    --halloween-card-border: rgba(224, 108, 40, 0.38);
+    --halloween-card-hover-border: rgba(243, 134, 56, 0.7);
+
+    --halloween-orange-primary: #e06c28;
+    --halloween-orange-light: #f97316;
+    --halloween-orange-amber: #fb923c;
+    --halloween-orange-glow: rgba(224, 108, 40, 0.4);
+    --halloween-purple-deep: #1d1233;
+
+    --halloween-text-bright: #ffffff;
+    --halloween-text-sub: #d1d5db;
+    --halloween-text-dim: #9ca3af;
+
+    /* Decoration Sizing */
+    --halloween-moon-size: 340px;
+    --halloween-web-size: 160px;
+    --halloween-ghost-size: 90px;
+    --halloween-skull-size: 70px;
+    --halloween-candle-size: 60px;
+    --halloween-pumpkin-size: 110px;
+
+    /* Animation Timings */
+    --halloween-moon-pulse-speed: 7s;
+    --halloween-fog-drift-speed: 32s;
+    --halloween-bat-glide-speed: 16s;
+    --halloween-ghost-float-speed: 6s;
+    --halloween-flicker-speed: 3.5s;
+}
+
+/* ========================================================
+   1. GLOBAL MOOD & THEME OVERRIDES (body.halloween-theme)
+   ======================================================== */
+
+body.halloween-theme {
+    /* Override existing CSS variables to seamlessly transform the UI */
+    --primary: #ffffff;
+    --primary-2: #ffffff;
+    --accent: var(--halloween-orange-light);
+    --accent-light: var(--halloween-orange-amber);
+    --accent-2: #ea580c;
+    --dark-bg: var(--halloween-bg-primary);
+    --dark-2: var(--halloween-bg-secondary);
+    --glass-bg: var(--halloween-bg-card);
+    --glass-border: var(--halloween-card-border);
+    --glass-hover: rgba(224, 108, 40, 0.2);
+    --text-main: var(--halloween-text-bright);
+    --text-muted: var(--halloween-text-sub);
+    --text-dim: var(--halloween-text-dim);
+    --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.6);
+    --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.75);
+
+    background-color: var(--halloween-bg-primary) !important;
+    color: var(--halloween-text-bright) !important;
+    transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* Custom themed cursor */
+body.halloween-theme,
+body.halloween-theme a,
+body.halloween-theme button,
+body.halloween-theme input,
+body.halloween-theme select {
+    cursor: url('assets/halloween-cursor.png') 16 16, auto;
+}
+
+body.halloween-theme a:hover,
+body.halloween-theme button:hover,
+body.halloween-theme [role="button"]:hover {
+    cursor: url('assets/halloween-cursor.png') 16 16, pointer;
+}
+
+/* Themed Halloween Scrollbar */
+body.halloween-theme::-webkit-scrollbar {
+    width: 10px;
+}
+
+body.halloween-theme::-webkit-scrollbar-track {
+    background: #08060f;
+}
+
+body.halloween-theme::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--halloween-orange-light), #8b2505);
+    border-radius: 6px;
+    border: 2px solid #08060f;
+}
+
+body.halloween-theme::-webkit-scrollbar-thumb:hover {
+    background: var(--halloween-orange-amber);
+}
+
+/* Ambient Eerie Midnight Sky */
+body.halloween-theme::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -10;
+    background-color: #0b0914 !important;
+    background-image:
+        radial-gradient(at 15% 15%, rgba(105, 30, 160, 0.38) 0px, transparent 55%),
+        radial-gradient(at 85% 20%, rgba(224, 108, 40, 0.28) 0px, transparent 50%),
+        radial-gradient(at 50% 55%, rgba(45, 18, 75, 0.45) 0px, transparent 65%),
+        radial-gradient(at 10% 85%, rgba(195, 75, 20, 0.25) 0px, transparent 50%),
+        radial-gradient(at 90% 90%, rgba(85, 20, 130, 0.38) 0px, transparent 50%) !important;
+    transform: translateZ(0);
+}
+
+/* Dim ambient landing blobs and grid */
+body.halloween-theme .bg-blobs .blob {
+    opacity: 0.15 !important;
+    filter: blur(80px) saturate(1.8) !important;
+}
+
+body.halloween-theme .bg-grid {
+    opacity: 0.04 !important;
+}
+
+/* Atmospheric Viewport Vignette */
+.halloween-vignette {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none !important;
+    user-select: none !important;
+    background: radial-gradient(circle at center, transparent 60%, rgba(4, 2, 8, 0.6) 100%);
+}
+
+/* ========================================================
+   2. TEXT CONTRAST, HEADINGS, PARAGRAPHS & HIGHLIGHTS
+   ======================================================== */
+
+/* Headings & Titles: 100% white, crisp, legible */
+body.halloween-theme h1,
+body.halloween-theme h2,
+body.halloween-theme h3,
+body.halloween-theme h4,
+body.halloween-theme h5,
+body.halloween-theme h6,
+body.halloween-theme .hero-title,
+body.halloween-theme .section-title,
+body.halloween-theme .cta-box h2,
+body.halloween-theme .vm-card h3,
+body.halloween-theme .product-card h3,
+body.halloween-theme .step-card h4,
+body.halloween-theme .nav-logo-text,
+body.halloween-theme .footer-col h5,
+body.halloween-theme .card-header-row h3,
+body.halloween-theme .product-row-info h5,
+body.halloween-theme .testi-name,
+body.halloween-theme [style*="color: #000"],
+body.halloween-theme [style*="color: #000000"],
+body.halloween-theme [style*="color:#000"],
+body.halloween-theme [style*="color:#000000"],
+body.halloween-theme [style*="color: #1f2937"],
+body.halloween-theme [style*="color:#1f2937"] {
+    color: #ffffff !important;
+}
+
+/* Highlights (e.g. "Sering Ditanyakan", "Lapaktifikasi") */
+body.halloween-theme .highlight,
+body.halloween-theme .highlight-cyan,
+body.halloween-theme span.highlight,
+body.halloween-theme .section-title .highlight {
+    color: var(--halloween-orange-light) !important;
+    text-shadow: 0 0 16px rgba(249, 115, 22, 0.45) !important;
+}
+
+/* Hero title gradient text tuned to burning pumpkin amber */
+body.halloween-theme .grad-text {
+    background: linear-gradient(135deg, #f97316 0%, #fb923c 45%, #facc15 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    color: #f97316 !important;
+    filter: drop-shadow(0 2px 10px rgba(249, 115, 22, 0.45)) !important;
+}
+
+/* All Paragraphs, Descriptions, Subtitles: bright readable soft silver-white */
+body.halloween-theme p,
+body.halloween-theme .hero-desc,
+body.halloween-theme .section-subtitle,
+body.halloween-theme .feature-card p,
+body.halloween-theme .fitur-card p,
+body.halloween-theme .step-card p,
+body.halloween-theme .product-card p,
+body.halloween-theme .testi-text,
+body.halloween-theme .faq-answer,
+body.halloween-theme .faq-answer p,
+body.halloween-theme .cta-box p,
+body.halloween-theme .vm-card p,
+body.halloween-theme .vm-misi li,
+body.halloween-theme .footer-brand p,
+body.halloween-theme .footer-col ul li a,
+body.halloween-theme .footer-address,
+body.halloween-theme .product-row-info p,
+body.halloween-theme .trust-item,
+body.halloween-theme [style*="color: #555"],
+body.halloween-theme [style*="color: #555555"],
+body.halloween-theme [style*="color:#555"],
+body.halloween-theme [style*="color:#555555"] {
+    color: #d1d5db !important;
+}
+
+/* Sub-labels and muted items */
+body.halloween-theme .stat-label,
+body.halloween-theme .mini-card .lbl,
+body.halloween-theme .product-card-footer span,
+body.halloween-theme .testi-role {
+    color: #9ca3af !important;
+}
+
+/* Prominent Numbers & Accents */
+body.halloween-theme .mini-card .num,
+body.halloween-theme .stat-num,
+body.halloween-theme .product-row-price .price-now {
+    color: var(--halloween-orange-light) !important;
+    font-weight: 800 !important;
+    text-shadow: 0 0 12px rgba(249, 115, 22, 0.35) !important;
+}
+
+/* Chevron arrows & check icons */
+body.halloween-theme .bi-chevron-right,
+body.halloween-theme .bi-patch-check-fill {
+    color: var(--halloween-orange-light) !important;
+}
+
+/* ========================================================
+   3. ALL CARDS & CONTAINERS: DARK GLASS & VISIBLE BORDERS
+   ======================================================== */
+
+body.halloween-theme .section-wrap.alt {
+    background: rgba(14, 10, 22, 0.65) !important;
+    border-top: 1px solid rgba(224, 108, 40, 0.18) !important;
+    border-bottom: 1px solid rgba(224, 108, 40, 0.18) !important;
+}
+
+/* UNIFIED CARD STYLING ACROSS THE ENTIRE PAGE */
+body.halloween-theme .glass-card,
+body.halloween-theme .hero-3card,
+body.halloween-theme .hero-3card-featured,
+body.halloween-theme .mini-card,
+body.halloween-theme .stat-card,
+body.halloween-theme .feature-card,
+body.halloween-theme .fitur-card,
+body.halloween-theme .vm-card,
+body.halloween-theme .vm-card-interactive,
+body.halloween-theme .step-card,
+body.halloween-theme .product-card,
+body.halloween-theme .testi-card,
+body.halloween-theme .cta-box,
+body.halloween-theme .jasa-cta-box,
+body.halloween-theme .partner-promo-card,
+body.halloween-theme .product-row,
+body.halloween-theme [style*="background: #ffffff"],
+body.halloween-theme [style*="background:#ffffff"],
+body.halloween-theme [style*="background: #fafafa"],
+body.halloween-theme [style*="background:#fafafa"] {
+    background: var(--halloween-bg-card) !important;
+    border: 1px solid var(--halloween-card-border) !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease !important;
+}
+
+body.halloween-theme .glass-card:hover,
+body.halloween-theme .hero-3card:hover,
+body.halloween-theme .hero-3card-featured:hover,
+body.halloween-theme .feature-card:hover,
+body.halloween-theme .fitur-card:hover,
+body.halloween-theme .step-card:hover,
+body.halloween-theme .product-card:hover,
+body.halloween-theme .testi-card:hover,
+body.halloween-theme .vm-card-interactive:hover {
+    border-color: var(--halloween-card-hover-border) !important;
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.65), 0 0 22px rgba(224, 108, 40, 0.25) !important;
+    transform: translateY(-4px) !important;
+}
+
+/* ========================================================
+   4. FAQ ACCORDION (SPECIFIC HIGH-PRIORITY FIX)
+   ======================================================== */
+
+body.halloween-theme .faq-item {
+    background: transparent !important;
+    border: none !important;
+    margin-bottom: 14px;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+body.halloween-theme .faq-question {
+    background: rgba(26, 20, 42, 0.96) !important;
+    border: 1px solid var(--halloween-card-border) !important;
+    color: #ffffff !important;
+    transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+body.halloween-theme .faq-question:hover,
+body.halloween-theme .faq-question.open {
+    background: rgba(36, 26, 56, 0.98) !important;
+    border-color: var(--halloween-orange-light) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 20px rgba(224, 108, 40, 0.25) !important;
+}
+
+body.halloween-theme .faq-icon {
+    color: var(--halloween-orange-light) !important;
+    font-size: 1.1rem !important;
+}
+
+body.halloween-theme .faq-answer {
+    background: rgba(18, 14, 28, 0.98) !important;
+    border: 1px solid var(--halloween-card-border) !important;
+    border-top: none !important;
+    color: #d1d5db !important;
+}
+
+body.halloween-theme .faq-answer p {
+    color: #d1d5db !important;
+    font-size: 0.95rem !important;
+    line-height: 1.7 !important;
+}
+
+/* ========================================================
+   5. COMPONENT-SPECIFIC CARDS & ICONS
+   ======================================================== */
+
+/* Hero 3-cards internal styling */
+body.halloween-theme .hero-3card h5 {
+    color: #ffffff !important;
+    font-size: 0.84rem !important;
+}
+
+body.halloween-theme .hero-3card-img {
+    background: rgba(38, 25, 60, 0.8) !important;
+    border: 1px solid rgba(224, 108, 40, 0.4) !important;
+    box-shadow: 0 0 14px rgba(224, 108, 40, 0.2) !important;
+}
+
+body.halloween-theme .hero-3card-img img {
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.45)) !important;
+}
+
+body.halloween-theme .hero-3card-lines span {
+    background: rgba(224, 108, 40, 0.45) !important;
+}
+
+/* Step Numbers */
+body.halloween-theme .step-num {
+    background: linear-gradient(135deg, var(--halloween-orange-primary) 0%, #ba430e 100%) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 190, 110, 0.5) !important;
+    box-shadow: 0 4px 14px rgba(224, 108, 40, 0.4) !important;
+}
+
+/* Section Icons (Feature, Stat, VM, Product) */
+body.halloween-theme .stat-icon,
+body.halloween-theme .feature-icon,
+body.halloween-theme .vm-icon,
+body.halloween-theme .product-card-icon,
+body.halloween-theme .product-icon {
+    background: rgba(35, 22, 55, 0.92) !important;
+    border: 1px solid rgba(224, 108, 40, 0.42) !important;
+    color: var(--halloween-orange-light) !important;
+    box-shadow: 0 0 16px rgba(224, 108, 40, 0.22) !important;
+}
+
+body.halloween-theme .product-card-icon img {
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35)) !important;
+}
+
+body.halloween-theme .product-card-footer {
+    border-top: 1px solid rgba(224, 108, 40, 0.2) !important;
+}
+
+/* Testimonial Cards */
+body.halloween-theme .testi-stars {
+    color: #facc15 !important;
+}
+
+body.halloween-theme .testi-avatar {
+    background: rgba(45, 30, 70, 0.9) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(224, 108, 40, 0.4) !important;
+}
+
+/* Mitra Industri Cards: Off-white background with amber border so all brand logos stay visible */
+body.halloween-theme .mitra-card {
+    background: rgba(255, 255, 255, 0.95) !important;
+    border: 1px solid rgba(224, 108, 40, 0.45) !important;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4) !important;
+}
+
+body.halloween-theme .mitra-card img {
+    filter: none !important;
+    opacity: 1 !important;
+}
+
+/* CTA Box */
+body.halloween-theme .cta-box {
+    background: linear-gradient(135deg, rgba(30, 20, 50, 0.95) 0%, rgba(18, 12, 30, 0.98) 100%) !important;
+    border: 1px solid rgba(224, 108, 40, 0.45) !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(224, 108, 40, 0.2) !important;
+}
+
+/* ========================================================
+   6. BUTTONS & NAVIGATION
+   ======================================================== */
+
+body.halloween-theme .btn-primary,
+body.halloween-theme .btn-nav-signup,
+body.halloween-theme .btn-3card,
+body.halloween-theme .btn-see {
+    background: linear-gradient(135deg, var(--halloween-orange-primary) 0%, #ba430e 100%) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 190, 110, 0.5) !important;
+    box-shadow: 0 6px 20px var(--halloween-orange-glow) !important;
+    transition: all 0.3s ease !important;
+}
+
+body.halloween-theme .btn-primary:hover,
+body.halloween-theme .btn-nav-signup:hover,
+body.halloween-theme .btn-3card:hover,
+body.halloween-theme .btn-see:hover {
+    background: linear-gradient(135deg, var(--halloween-orange-light) 0%, #d44d12 100%) !important;
+    box-shadow: 0 8px 25px rgba(243, 134, 56, 0.55), 0 0 16px rgba(243, 134, 56, 0.35) !important;
+    transform: translateY(-2px) !important;
+}
+
+body.halloween-theme .btn-secondary,
+body.halloween-theme .btn-nav-login {
+    background: rgba(30, 22, 48, 0.85) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(224, 108, 40, 0.4) !important;
+    transition: all 0.3s ease !important;
+}
+
+body.halloween-theme .btn-secondary:hover,
+body.halloween-theme .btn-nav-login:hover {
+    background: rgba(45, 30, 70, 0.95) !important;
+    border-color: var(--halloween-orange-light) !important;
+    box-shadow: 0 4px 18px rgba(224, 108, 40, 0.3) !important;
+}
+
+/* Navbar theming */
+body.halloween-theme #navbar {
+    background: rgba(11, 9, 20, 0.94) !important;
+    border-bottom: 1px solid rgba(224, 108, 40, 0.28) !important;
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.6) !important;
+}
+
+body.halloween-theme .nav-links a {
+    color: #cbd2e1 !important;
+}
+
+body.halloween-theme .nav-links a.active,
+body.halloween-theme .nav-links a:hover {
+    color: var(--halloween-orange-light) !important;
+}
+
+body.halloween-theme .nav-toggle {
+    color: #ffffff !important;
+}
+
+body.halloween-theme .nav-logo-icon {
+    background: var(--halloween-orange-primary) !important;
+    color: #ffffff !important;
+}
+
+/* Mobile drawer menu theming */
+body.halloween-theme .mobile-menu {
+    background: rgba(14, 10, 24, 0.98) !important;
+    border-left: 1px solid rgba(224, 108, 40, 0.35) !important;
+}
+
+body.halloween-theme .mobile-nav-links a {
+    color: #d1d5db !important;
+}
+
+body.halloween-theme .mobile-nav-links a:hover {
+    color: var(--halloween-orange-light) !important;
+}
+
+body.halloween-theme .mobile-menu-close {
+    color: #ffffff !important;
+}
+
+/* Footer theming */
+body.halloween-theme footer.footer {
+    background: rgba(8, 6, 15, 0.98) !important;
+    border-top: 1px solid rgba(224, 108, 40, 0.3) !important;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.6) !important;
+}
+
+body.halloween-theme .social-btn {
+    background: rgba(25, 18, 40, 0.85) !important;
+    border: 1px solid rgba(224, 108, 40, 0.35) !important;
+    color: #ffffff !important;
+}
+
+body.halloween-theme .social-btn:hover {
+    background: var(--halloween-orange-primary) !important;
+    border-color: var(--halloween-orange-light) !important;
+}
+
+/* Modal theming */
+body.halloween-theme .modal-box {
+    background: rgba(22, 17, 36, 0.97) !important;
+    border: 1px solid rgba(224, 108, 40, 0.45) !important;
+    color: #ffffff !important;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.75), 0 0 30px rgba(224, 108, 40, 0.25) !important;
+}
+
+body.halloween-theme .modal-box h3,
+body.halloween-theme .modal-box label {
+    color: #ffffff !important;
+}
+
+body.halloween-theme .modal-box input {
+    background: rgba(14, 10, 22, 0.9) !important;
+    border: 1px solid rgba(224, 108, 40, 0.38) !important;
+    color: #ffffff !important;
+}
+
+body.halloween-theme .modal-close {
+    background: rgba(35, 25, 50, 0.9) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(224, 108, 40, 0.4) !important;
+}
+
+/* ========================================================
+   7. ENVIRONMENTAL & SECTION DECORATIVE OVERLAYS
+   ======================================================== */
+
+.halloween-decoration-layer {
+    pointer-events: none !important;
+    user-select: none !important;
+}
+
+/* Full Moon in Hero */
+.halloween-moon-wrapper {
+    position: absolute;
+    top: 50px;
+    right: 8%;
+    width: var(--halloween-moon-size);
+    height: var(--halloween-moon-size);
+    z-index: 0;
+    pointer-events: none;
+    user-select: none;
+    opacity: 0.85;
+}
+
+.halloween-moon {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 0 35px rgba(254, 240, 138, 0.35)) drop-shadow(0 0 75px rgba(224, 108, 40, 0.22));
+    animation: halloween-moon-pulse var(--halloween-moon-pulse-speed) ease-in-out infinite;
+}
+
+@keyframes halloween-moon-pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.85;
+    }
+    50% {
+        transform: scale(1.025);
+        opacity: 0.98;
+    }
+}
+
+/* Drifting Fog along the bottom of the viewport */
+.halloween-fog-layer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 200%;
+    height: 110px;
+    z-index: 2;
+    pointer-events: none;
+    user-select: none;
+    background-image: url('assets/halloween-fog.webp');
+    background-repeat: repeat-x;
+    background-position: bottom left;
+    background-size: 800px 110px;
+    opacity: 0.32;
+    animation: halloween-fog-drift var(--halloween-fog-drift-speed) linear infinite;
+}
+
+@keyframes halloween-fog-drift {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+/* Periodic Flying Bat Swarm across the screen */
+.halloween-bat-swarm {
+    position: fixed;
+    top: 14%;
+    left: -150px;
+    z-index: 3;
+    pointer-events: none;
+    user-select: none;
+    animation: halloween-bat-swarm-flight var(--halloween-bat-glide-speed) linear infinite;
+}
+
+.halloween-bat-swarm img {
+    width: 48px;
+    height: auto;
+    opacity: 0.75;
+    filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.4));
+}
+
+.halloween-bat-swarm .bat-secondary {
+    width: 32px;
+    margin-left: 20px;
+    margin-top: 12px;
+    opacity: 0.6;
+}
+
+@keyframes halloween-bat-swarm-flight {
+    0% {
+        transform: translate(0, 0) scale(0.9);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.8;
+    }
+    50% {
+        transform: translate(60vw, 40px) scale(1);
+    }
+    90% {
+        opacity: 0.8;
+    }
+    100% {
+        transform: translate(110vw, -30px) scale(1.1);
+        opacity: 0;
+    }
+}
+
+/* Fixed Corner Spiderweb (top-right) */
+.halloween-corner-web {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: var(--halloween-web-size);
+    height: auto;
+    opacity: 0.45;
+    z-index: 998;
+    pointer-events: none;
+    user-select: none;
+}
+
+/* Hero Section Bat */
+.halloween-hero-bat-wrapper {
+    position: absolute;
+    top: 15px;
+    right: 30px;
+    z-index: 4;
+    pointer-events: none;
+    user-select: none;
+}
+
+.halloween-hero-bat {
+    width: 75px;
+    height: auto;
+    opacity: 0.78;
+    animation: halloween-bat-glide 7s ease-in-out infinite;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.4));
+}
+
+@keyframes halloween-bat-glide {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-12px) rotate(3deg);
+    }
+}
+
+/* Floating Gentle Ghost in Fitur / Visi Misi Section */
+.halloween-ghost-wrapper {
+    position: absolute;
+    top: 18px;
+    left: 4%;
+    z-index: 3;
+    pointer-events: none;
+    user-select: none;
+}
+
+.halloween-ghost {
+    width: var(--halloween-ghost-size);
+    height: auto;
+    opacity: 0.75;
+    filter: drop-shadow(0 6px 18px rgba(180, 190, 220, 0.28));
+    animation: halloween-ghost-float var(--halloween-ghost-float-speed) ease-in-out infinite;
+}
+
+@keyframes halloween-ghost-float {
+    0%, 100% {
+        transform: translateY(0) rotate(-1deg);
+    }
+    50% {
+        transform: translateY(-16px) rotate(2deg);
+    }
+}
+
+/* Spooky Candles in Stats & Testimoni Section */
+.halloween-candle-wrapper {
+    position: absolute;
+    bottom: 14px;
+    left: 3%;
+    z-index: 3;
+    pointer-events: none;
+    user-select: none;
+}
+
+.halloween-candle {
+    width: var(--halloween-candle-size);
+    height: auto;
+    opacity: 0.85;
+    filter: drop-shadow(0 0 14px rgba(255, 180, 50, 0.45));
+    animation: halloween-candle-flicker var(--halloween-flicker-speed) ease-in-out infinite;
+}
+
+@keyframes halloween-candle-flicker {
+    0%, 100% {
+        filter: drop-shadow(0 0 12px rgba(255, 180, 50, 0.4));
+        opacity: 0.85;
+    }
+    50% {
+        filter: drop-shadow(0 0 20px rgba(255, 195, 75, 0.65));
+        opacity: 0.95;
+    }
+}
+
+/* Classic Skull in Cara Kerja / Testimoni Section */
+.halloween-skull-wrapper {
+    position: absolute;
+    top: 18px;
+    right: 3%;
+    z-index: 3;
+    pointer-events: none;
+    user-select: none;
+}
+
+.halloween-skull {
+    width: var(--halloween-skull-size);
+    height: auto;
+    opacity: 0.68;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.35));
+}
+
+/* Footer & CTA Carved Pumpkin */
+.halloween-footer-pumpkin-wrapper {
+    position: absolute;
+    bottom: 12px;
+    right: 28px;
+    z-index: 10;
+    pointer-events: none;
+    user-select: none;
+}
+
+.halloween-cta-pumpkin-wrapper {
+    position: absolute;
+    bottom: -15px;
+    left: 25px;
+    z-index: 5;
+    pointer-events: none;
+    user-select: none;
+}
+
+.halloween-footer-pumpkin,
+.halloween-cta-pumpkin {
+    width: var(--halloween-pumpkin-size);
+    height: auto;
+    opacity: 0.92;
+    animation: halloween-pumpkin-glow 4.5s ease-in-out infinite;
+}
+
+@keyframes halloween-pumpkin-glow {
+    0%, 100% {
+        filter: drop-shadow(0 4px 12px rgba(var(--halloween-orange-primary), 0.2));
+    }
+    50% {
+        filter: drop-shadow(0 6px 22px rgba(243, 134, 56, 0.42));
+    }
+}
+
+/* Card corner spiderweb decorative overlay */
+.halloween-card-web {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 65px;
+    height: auto;
+    opacity: 0.38;
+    pointer-events: none;
+    user-select: none;
+}
+
+/* ========================================================
+   8. RESPONSIVE OPTIMIZATIONS
+   ======================================================== */
+
+@media (max-width: 991px) {
+    :root {
+        --halloween-moon-size: 240px;
+        --halloween-web-size: 110px;
+        --halloween-ghost-size: 70px;
+        --halloween-pumpkin-size: 85px;
+        --halloween-candle-size: 45px;
+    }
+
+    .halloween-moon-wrapper {
+        top: 25px;
+        right: 4%;
+        opacity: 0.7;
+    }
+}
+
+@media (max-width: 768px) {
+    :root {
+        --halloween-moon-size: 180px;
+        --halloween-web-size: 80px;
+        --halloween-pumpkin-size: 65px;
+    }
+
+    /* Hide background-heavy moving elements on mobile to guarantee smooth 60fps */
+    .halloween-bat-swarm,
+    .halloween-hero-bat-wrapper,
+    .halloween-ghost-wrapper {
+        display: none !important;
+    }
+
+    .halloween-moon-wrapper {
+        top: 15px;
+        right: 2%;
+        opacity: 0.55;
+    }
+
+    .halloween-fog-layer {
+        height: 70px;
+        background-size: 500px 70px;
+        opacity: 0.24;
+    }
+}
+
+/* ========================================================
+   9. ACCESSIBILITY: REDUCED MOTION
+   ======================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    .halloween-moon,
+    .halloween-fog-layer,
+    .halloween-bat-swarm,
+    .halloween-hero-bat,
+    .halloween-ghost,
+    .halloween-candle,
+    .halloween-footer-pumpkin,
+    .halloween-cta-pumpkin {
+        animation: none !important;
+        transition: none !important;
+    }
+}

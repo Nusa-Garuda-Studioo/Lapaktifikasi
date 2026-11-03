@@ -93,11 +93,7 @@
         </div>
         <div class="footer-bottom-row">
             <p>&copy; {{ date('Y') }} {{ $siteName }}. Hak Cipta Dilindungi Undang-Undang.</p>
-            <div class="footer-bottom-badges">
-                <span class="badge-secure"><i class="bi bi-shield-check"></i> Transaksi Aman 256-Bit</span>
-                <span class="badge-secure"><i class="bi bi-lightning-charge"></i> Instant Delivery &lt; 5s</span>
-                <span class="badge-secure"><i class="bi bi-patch-check"></i> Garansi Resmi</span>
-            </div>
+          
         </div>
     </div>
 </footer>

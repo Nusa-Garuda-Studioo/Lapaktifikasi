@@ -29,6 +29,11 @@
 
     <!-- Page Specific Stylesheets -->
     @stack('styles')
+
+    <!-- HALLOWEEN:START -->
+    <link rel="stylesheet" href="{{ asset('halloween/halloween.css') }}">
+    <script src="{{ asset('halloween/halloween.js') }}" defer></script>
+    <!-- HALLOWEEN:END -->
 </head>
 
 <body>
