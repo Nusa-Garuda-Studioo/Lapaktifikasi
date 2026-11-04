@@ -108,15 +108,15 @@
                     <div class="trust-item"><i class="bi bi-check-circle-fill"></i> Pembayaran QRIS &amp; Bank</div>
                 </div> -->
             </div>
-            <div class="hero-visual" style="flex: 0 0 auto; max-width: 360px; width: 100%; margin: 0 auto; display: flex; justify-content: center; align-items: center;">
-                <div class="hero-img-wrapper" style="position: relative; width: 100%; max-width: 340px; aspect-ratio: 4 / 5; display: flex; align-items: center; justify-content: center;">
+            <div class="hero-visual" style="flex: 0 0 auto; max-width: 480px; width: 100%; margin: 0; display: flex; justify-content: center; align-items: center;">
+                <div class="hero-img-wrapper" style="position: relative; width: 100%; max-width: 460px; aspect-ratio: 4 / 5; display: flex; align-items: center; justify-content: center;">
                     <div class="hero-img-glow"></div>
                     <img src="{{ asset('assets/img/heroatas.png') }}" 
                          alt="{{ isset($websiteSettings) && $websiteSettings->site_name ? $websiteSettings->site_name : 'Lapaktifikasi' }} - Produk Digital & Akun Premium" 
                          class="hero-banner-img"
-                         width="340"
-                         height="425"
-                         style="width: 100%; height: auto; max-height: 425px; aspect-ratio: 4 / 5; object-fit: contain; display: block;"
+                         width="460"
+                         height="575"
+                         style="width: 100%; height: auto; max-height: 575px; aspect-ratio: 4 / 5; object-fit: contain; display: block;"
                          loading="eager"
                          fetchpriority="high">
                 </div>
