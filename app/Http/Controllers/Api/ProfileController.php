@@ -48,6 +48,7 @@ class ProfileController extends ApiController
         $validator = Validator::make($request->all(), [
             'name' => 'nullable|string|max:255',
             'no_whatsapp' => 'nullable|string|max:20',
+            'current_password' => 'required_with:password|string',
             'password' => 'nullable|min:10',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048'
         ]);
@@ -56,12 +57,12 @@ class ProfileController extends ApiController
             return $this->sendError('Validasi gagal', $validator->errors()->toArray(), 422);
         }
 
-        if ($request->filled('name')) {
-            $user->name = $request->name;
-        }
-
         if ($request->filled('password')) {
+            if (!Hash::check($request->current_password, $user->password)) {
+                return $this->sendError('Password saat ini salah', ['current_password' => ['Password saat ini yang Anda masukkan salah.']], 422);
+            }
             $user->password = Hash::make($request->password);
+            $user->must_change_password = false;
         }
 
         if ($request->hasFile('profile_picture')) {

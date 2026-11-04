@@ -330,15 +330,30 @@ class PembayaranController extends Controller
 
     public function download_bukti_pembayaran(string $order_id)
     {
-        $id = session('id');
-        $user = User::find($id);
+        $user = Auth::user();
+        if (!$user && session()->has('id')) {
+            $user = User::find(session('id'));
+        }
 
-        $beliProduk = \App\Models\BeliProdukModel::where('order_id', $order_id)->first();
-        if ($beliProduk && $beliProduk->user_id != $id) {
-            abort(403, 'Unauthorized access.');
+        if (!$user) {
+            abort(401, 'Unauthenticated.');
+        }
+
+        $pembelian = \App\Models\Pembelian::where('order_id', $order_id)->first();
+        if ($pembelian) {
+            $this->authorize('view', $pembelian);
+        } else {
+            $beliProduk = \App\Models\BeliProdukModel::where('order_id', $order_id)->first();
+            if (!$beliProduk || ($beliProduk->user_id != $user->id && $user->role_id != 1)) {
+                abort(403, 'Unauthorized access.');
+            }
         }
 
         $pembayaran = PembayaranModel::where('order_id', $order_id)->first();
+        if (!$pembayaran) {
+            abort(404, 'Data pembayaran tidak ditemukan.');
+        }
+
         $produk = ProdukModel::withWhereHas('produk_beli', function ($query) use ($order_id) {
             $query->where('order_id', $order_id);
         })->get();

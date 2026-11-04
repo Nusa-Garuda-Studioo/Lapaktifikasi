@@ -337,7 +337,7 @@ class ProductController extends Controller
 
                 // Process Voucher if provided
                 if (!empty($kode_voucher)) {
-                    $voucher = \App\Models\Voucher::where('kode', $kode_voucher)->first();
+                    $voucher = \App\Models\Voucher::where('kode', $kode_voucher)->lockForUpdate()->first();
 
                     if (!$voucher || !$voucher->is_active) {
                         throw new \Exception("Kode voucher '{$kode_voucher}' tidak valid atau tidak aktif.");
@@ -371,6 +371,7 @@ class ProductController extends Controller
                     // Auto-claim if not claimed yet
                     $existingKlaim = \App\Models\VoucherKlaim::where('id_voucher', $voucher->id_voucher)
                         ->where('id_customer', $id_customer)
+                        ->lockForUpdate()
                         ->first();
 
                     if (!$existingKlaim) {

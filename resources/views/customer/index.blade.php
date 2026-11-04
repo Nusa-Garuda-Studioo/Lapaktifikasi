@@ -74,7 +74,7 @@
             Swal.fire({
                 icon: "error",
                 title: "Gagal Mengubah Profil",
-                html: `{!! implode('<br>', $errors->all()) !!}`
+                html: {!! json_encode(implode('<br>', array_map('e', $errors->all()))) !!}
             });
         </script>
     @endif

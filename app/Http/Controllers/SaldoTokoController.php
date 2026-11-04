@@ -55,33 +55,37 @@ class SaldoTokoController extends Controller
                 ->withInput();
         }
 
-        $nominal = $request->input('nominal');
-        
-        if ($nominal > $toko->saldo) {
+        $nominal = (int) $request->input('nominal');
+
+        try {
+            DB::transaction(function () use ($id_toko, $nominal, $request) {
+                // Lock the shop row for update to prevent race conditions
+                $tokoLocked = Toko::where('id_toko', $id_toko)->lockForUpdate()->firstOrFail();
+
+                if ($nominal > (float) $tokoLocked->saldo) {
+                    throw new \Exception('Nominal penarikan melebihi saldo toko saat ini.');
+                }
+
+                $saldo_akhir = $tokoLocked->saldo - $nominal;
+
+                MutasiSaldo::create([
+                    'id_toko' => $tokoLocked->id_toko,
+                    'tipe' => 'potong_withdraw',
+                    'nominal' => -$nominal,
+                    'saldo_akhir' => $saldo_akhir,
+                    'keterangan' => $request->input('keterangan'),
+                    'dibuat_oleh' => Auth::id(),
+                ]);
+
+                $tokoLocked->update([
+                    'saldo' => $saldo_akhir
+                ]);
+            });
+        } catch (\Exception $e) {
             return redirect('/saldo_toko/detail/' . $id_toko)
-                ->with('error', 'Gagal withdraw: Nominal penarikan melebihi saldo toko saat ini.')
+                ->with('error', 'Gagal withdraw: ' . $e->getMessage())
                 ->withInput();
         }
-
-        DB::transaction(function () use ($toko, $nominal, $request) {
-            // Lock the shop row for update to prevent race conditions
-            $tokoLocked = Toko::where('id_toko', $toko->id_toko)->lockForUpdate()->first();
-            
-            $saldo_akhir = $tokoLocked->saldo - $nominal;
-
-            MutasiSaldo::create([
-                'id_toko' => $tokoLocked->id_toko,
-                'tipe' => 'potong_withdraw',
-                'nominal' => -$nominal,
-                'saldo_akhir' => $saldo_akhir,
-                'keterangan' => $request->input('keterangan'),
-                'dibuat_oleh' => Auth::id(),
-            ]);
-
-            $tokoLocked->update([
-                'saldo' => $saldo_akhir
-            ]);
-        });
 
         Session::flash('success', 'Withdraw manual sebesar Rp ' . number_format($nominal, 0, ',', '.') . ' berhasil diproses.');
         return redirect('/saldo_toko/detail/' . $id_toko);

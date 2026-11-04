@@ -46,8 +46,8 @@ Route::prefix('v1')->namespace('App\Http\Controllers\Api')->group(function () {
         Route::post('/auth/reset-password', 'AuthController@resetPassword');
     });
 
-    // Protected Routes (auth:sanctum)
-    Route::middleware('auth:sanctum')->group(function () {
+    // Protected Routes (auth:sanctum & check.banned)
+    Route::middleware(['auth:sanctum', 'check.banned'])->group(function () {
         
         // Auth Logout & Profile
         Route::post('/auth/logout', 'AuthController@logout');

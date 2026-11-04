@@ -37,6 +37,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'only.customer'      => \App\Http\Middleware\OnlyCustomer::class,
             'only.seller'        => \App\Http\Middleware\OnlySeller::class,
             'check.maintenance'  => \App\Http\Middleware\CheckMaintenanceMode::class,
+            'check.banned'       => \App\Http\Middleware\CheckBannedUser::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

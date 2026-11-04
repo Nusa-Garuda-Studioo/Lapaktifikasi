@@ -412,13 +412,19 @@ class PremiumCustomerController extends Controller
             return redirect()->back()->with('error', 'File belum tersedia. Silakan hubungi seller.');
         }
 
-        $filePath = public_path('assets/file_digital/' . $pembelian->varianLayanan->file_path);
-        
-        if (!file_exists($filePath)) {
+        $privatePath = storage_path('app/private/file_digital/' . $pembelian->varianLayanan->file_path);
+        $publicPath = public_path('assets/file_digital/' . $pembelian->varianLayanan->file_path);
+
+        if (file_exists($privatePath)) {
+            $filePath = $privatePath;
+        } elseif (file_exists($publicPath)) {
+            $filePath = $publicPath;
+        } else {
             return redirect()->back()->with('error', 'File tidak ditemukan di server.');
         }
 
-        return response()->download($filePath);
+        $friendlyName = \Illuminate\Support\Str::slug($pembelian->varianLayanan->nama_varian) . '.' . pathinfo($filePath, PATHINFO_EXTENSION);
+        return response()->download($filePath, $friendlyName);
     }
 
     // === 4. Download Invoice PDF ===

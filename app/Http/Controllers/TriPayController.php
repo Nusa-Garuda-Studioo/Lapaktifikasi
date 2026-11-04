@@ -98,11 +98,12 @@ class TriPayController extends Controller
 
             // Verify amount consistency
             if ($totalAmount > 0 && (int) $pembelian->harga_saat_beli !== $totalAmount) {
-                Log::warning('TriPay webhook amount mismatch', [
+                Log::warning('TriPay webhook rejected: amount mismatch', [
                     'order_id' => $merchantRef,
                     'db_amount' => $pembelian->harga_saat_beli,
                     'webhook_amount' => $totalAmount,
                 ]);
+                return response()->json(['success' => false, 'message' => 'Amount mismatch'], 400);
             }
 
             // 5. Idempotency Guard (If already SUCCESS, do not repeat side effects)

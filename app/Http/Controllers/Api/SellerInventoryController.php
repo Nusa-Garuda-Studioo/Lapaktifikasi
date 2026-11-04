@@ -191,7 +191,7 @@ class SellerInventoryController extends ApiController
         ];
 
         if ($isDigital) {
-            $rules['file_digital'] = 'required|file|max:' . $limitKb;
+            $rules['file_digital'] = 'required|file|mimes:zip,rar,7z,tar,gz,pdf,epub,mobi,doc,docx,xls,xlsx,ppt,pptx,txt,mp3,mp4,wav|max:' . $limitKb;
         } else {
             $rules['durasi_hari'] = 'required|integer|min:1';
         }
@@ -210,8 +210,9 @@ class SellerInventoryController extends ApiController
 
         if ($isDigital && $request->hasFile('file_digital')) {
             $file = $request->file('file_digital');
-            $fileName = time() . '_' . $file->getClientOriginalName();
-            $targetDir = public_path('assets/file_digital');
+            $extension = strtolower($file->getClientOriginalExtension());
+            $fileName = time() . '_' . \Illuminate\Support\Str::random(32) . '.' . $extension;
+            $targetDir = storage_path('app/private/file_digital');
             if (!file_exists($targetDir)) @mkdir($targetDir, 0755, true);
             $file->move($targetDir, $fileName);
             $data['file_path'] = $fileName;
@@ -244,7 +245,7 @@ class SellerInventoryController extends ApiController
         ];
 
         if ($isDigital) {
-            $rules['file_digital'] = 'nullable|file|max:' . $limitKb;
+            $rules['file_digital'] = 'nullable|file|mimes:zip,rar,7z,tar,gz,pdf,epub,mobi,doc,docx,xls,xlsx,ppt,pptx,txt,mp3,mp4,wav|max:' . $limitKb;
         } else {
             $rules['durasi_hari'] = 'required|integer|min:1';
         }
@@ -262,12 +263,16 @@ class SellerInventoryController extends ApiController
         }
 
         if ($isDigital && $request->hasFile('file_digital')) {
-            if ($varian->file_path && file_exists(public_path('assets/file_digital/' . $varian->file_path))) {
-                @unlink(public_path('assets/file_digital/' . $varian->file_path));
+            if ($varian->file_path) {
+                $oldPrivate = storage_path('app/private/file_digital/' . $varian->file_path);
+                $oldPublic = public_path('assets/file_digital/' . $varian->file_path);
+                if (file_exists($oldPrivate)) @unlink($oldPrivate);
+                if (file_exists($oldPublic)) @unlink($oldPublic);
             }
             $file = $request->file('file_digital');
-            $fileName = time() . '_' . $file->getClientOriginalName();
-            $targetDir = public_path('assets/file_digital');
+            $extension = strtolower($file->getClientOriginalExtension());
+            $fileName = time() . '_' . \Illuminate\Support\Str::random(32) . '.' . $extension;
+            $targetDir = storage_path('app/private/file_digital');
             if (!file_exists($targetDir)) @mkdir($targetDir, 0755, true);
             $file->move($targetDir, $fileName);
             $varian->file_path = $fileName;
@@ -297,8 +302,11 @@ class SellerInventoryController extends ApiController
                 return $this->sendResponse([], 'Varian memiliki riwayat transaksi, status diubah menjadi nonaktif.');
             }
 
-            if ($varian->file_path && file_exists(public_path('assets/file_digital/' . $varian->file_path))) {
-                @unlink(public_path('assets/file_digital/' . $varian->file_path));
+            if ($varian->file_path) {
+                $oldPrivate = storage_path('app/private/file_digital/' . $varian->file_path);
+                $oldPublic = public_path('assets/file_digital/' . $varian->file_path);
+                if (file_exists($oldPrivate)) @unlink($oldPrivate);
+                if (file_exists($oldPublic)) @unlink($oldPublic);
             }
 
             StokAkun::where('id_varian', $varian->id_varian)->delete();

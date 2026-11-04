@@ -161,24 +161,22 @@ class AuthController extends Controller
             $newUser = User::create([
                 'email' => $email,
                 'password' => Hash::make($password),
-                'profile_picture' => (($email == "g4lihanggoro@gmail.com") ? 'avatar-admin.png' : $this->setIconProfile()),
-                'role_id' => (($email == "g4lihanggoro@gmail.com") ? 1 : 2)
+                'profile_picture' => $this->setIconProfile(),
+                'role_id' => 2
             ]);
 
-            if ($newUser->role_id != 1) {
-                $refCode = strtoupper(trim((string) ($request->input('ref') ?? session('ref'))));
-                $referrer = null;
-                if (!empty($refCode)) {
-                    $referrer = CustomerModel::where('kode_referral', $refCode)->first();
-                }
-
-                CustomerModel::create([
-                    'user_id' => $newUser->id,
-                    'direferensikan_oleh' => $referrer?->id,
-                ]);
-
-                session()->forget('ref');
+            $refCode = strtoupper(trim((string) ($request->input('ref') ?? session('ref'))));
+            $referrer = null;
+            if (!empty($refCode)) {
+                $referrer = CustomerModel::where('kode_referral', $refCode)->first();
             }
+
+            CustomerModel::create([
+                'user_id' => $newUser->id,
+                'direferensikan_oleh' => $referrer?->id,
+            ]);
+
+            session()->forget('ref');
 
             $this->setSessionFlash('success', 'Berhasil mendaftar. Silakan login terlebih dahulu.');
             return redirect('/login')->withInput();
@@ -206,24 +204,22 @@ class AuthController extends Controller
                 'email' => $userFromGoogle->getEmail(),
                 'name' => $userFromGoogle->getName(),
                 'password' => Hash::make($randomString),
-                'profile_picture' => (($userFromGoogle->getEmail() == "g4lihanggoro@gmail.com") ? 'avatar-admin.png' : $this->setIconProfile()),
-                'role_id' => (($userFromGoogle->getEmail() == "g4lihanggoro@gmail.com") ? 1 : 2)
+                'profile_picture' => $this->setIconProfile(),
+                'role_id' => 2
             ]);
 
-            if ($newUser->role_id != 1) {
-                $refCode = session('ref');
-                $referrer = null;
-                if (!empty($refCode)) {
-                    $referrer = CustomerModel::where('kode_referral', strtoupper(trim($refCode)))->first();
-                }
-
-                CustomerModel::create([
-                    'user_id' => $newUser->id,
-                    'direferensikan_oleh' => $referrer?->id,
-                ]);
-
-                session()->forget('ref');
+            $refCode = session('ref');
+            $referrer = null;
+            if (!empty($refCode)) {
+                $referrer = CustomerModel::where('kode_referral', strtoupper(trim($refCode)))->first();
             }
+
+            CustomerModel::create([
+                'user_id' => $newUser->id,
+                'direferensikan_oleh' => $referrer?->id,
+            ]);
+
+            session()->forget('ref');
 
             Auth::login($newUser);
             session()->regenerate();

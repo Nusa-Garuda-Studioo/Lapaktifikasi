@@ -359,27 +359,32 @@ class AdminController extends ApiController
 
         $nominal = (int) $request->nominal;
 
-        if ($nominal > (float) $toko->saldo) {
-            return $this->sendError('Nominal penarikan melebihi saldo toko saat ini.', [], 400);
+        try {
+            $mutasi = DB::transaction(function () use ($id_toko, $nominal, $request) {
+                $tokoLocked = Toko::where('id_toko', $id_toko)->lockForUpdate()->firstOrFail();
+
+                if ($nominal > (float) $tokoLocked->saldo) {
+                    throw new \Exception('Nominal penarikan melebihi saldo toko saat ini.');
+                }
+
+                $saldo_akhir = $tokoLocked->saldo - $nominal;
+
+                $record = MutasiSaldo::create([
+                    'id_toko' => $tokoLocked->id_toko,
+                    'tipe' => 'potong_withdraw',
+                    'nominal' => -$nominal,
+                    'saldo_akhir' => $saldo_akhir,
+                    'keterangan' => $request->keterangan,
+                    'dibuat_oleh' => Auth::id(),
+                ]);
+
+                $tokoLocked->update(['saldo' => $saldo_akhir]);
+
+                return $record;
+            });
+        } catch (\Exception $e) {
+            return $this->sendError($e->getMessage(), [], 400);
         }
-
-        $mutasi = DB::transaction(function () use ($toko, $nominal, $request) {
-            $tokoLocked = Toko::where('id_toko', $toko->id_toko)->lockForUpdate()->first();
-            $saldo_akhir = $tokoLocked->saldo - $nominal;
-
-            $record = MutasiSaldo::create([
-                'id_toko' => $tokoLocked->id_toko,
-                'tipe' => 'potong_withdraw',
-                'nominal' => -$nominal,
-                'saldo_akhir' => $saldo_akhir,
-                'keterangan' => $request->keterangan,
-                'dibuat_oleh' => Auth::id(),
-            ]);
-
-            $tokoLocked->update(['saldo' => $saldo_akhir]);
-
-            return $record;
-        });
 
         return $this->sendResponse([
             'mutasi' => $mutasi,

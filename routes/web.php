@@ -90,7 +90,7 @@ Route::get('/offline', function () {
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 // Web Push Notification Endpoints
-Route::prefix('webpush')->group(function () {
+Route::prefix('webpush')->middleware('throttle:15,1')->group(function () {
     Route::get('/key', [\App\Http\Controllers\WebPushController::class, 'getPublicKey'])->name('webpush.key');
     Route::post('/subscribe', [\App\Http\Controllers\WebPushController::class, 'subscribe'])->name('webpush.subscribe');
     Route::post('/unsubscribe', [\App\Http\Controllers\WebPushController::class, 'unsubscribe'])->name('webpush.unsubscribe');
@@ -131,7 +131,7 @@ Route::middleware('auth')->group(function () {
 
     Route::controller(ProductController::class)->group(function () {
         Route::get('/produk_terjual', 'produk_terjual')->middleware('prevent.customer');
-        Route::post('/proses_checkout_premium', 'proses_checkout_premium')->name('proses_checkout_premium');
+        Route::post('/proses_checkout_premium', 'proses_checkout_premium')->name('proses_checkout_premium')->middleware('throttle:checkout_rate_limit');
         Route::get('/varian/{id_varian}/stok', 'get_stok_varian');
     });
 
@@ -380,7 +380,7 @@ Route::middleware('guest')->group(function () {
         Route::post('/proses_login', 'proses_login')->middleware('throttle:limit_login');
         Route::get('/proses_login', function () { return redirect()->route('login'); });
 
-        Route::post('/proses_pendaftaran', 'proses_pendaftaran');
+        Route::post('/proses_pendaftaran', 'proses_pendaftaran')->middleware('throttle:limit_login');
         Route::get('/proses_pendaftaran', function () { return redirect('/pendaftaran'); });
         
         Route::post('/proses_lupa_password', 'proses_lupa_password');

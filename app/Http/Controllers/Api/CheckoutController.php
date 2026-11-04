@@ -84,7 +84,7 @@ class CheckoutController extends ApiController
                 $voucher_dipakai = null;
 
                 if (!empty($kode_voucher)) {
-                    $voucher = Voucher::where('kode', $kode_voucher)->first();
+                    $voucher = Voucher::where('kode', $kode_voucher)->lockForUpdate()->first();
 
                     if (!$voucher || !$voucher->is_active) {
                         throw new \Exception("Kode voucher '{$kode_voucher}' tidak valid atau tidak aktif.");
@@ -102,7 +102,7 @@ class CheckoutController extends ApiController
                         throw new \Exception("Minimal transaksi tidak terpenuhi.");
                     }
 
-                    $existingKlaim = VoucherKlaim::where('id_voucher', $voucher->id_voucher)->where('id_customer', $id_customer)->first();
+                    $existingKlaim = VoucherKlaim::where('id_voucher', $voucher->id_voucher)->where('id_customer', $id_customer)->lockForUpdate()->first();
                     if (!$existingKlaim) {
                         VoucherKlaim::create([
                             'id_voucher' => $voucher->id_voucher,

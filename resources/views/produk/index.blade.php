@@ -86,7 +86,7 @@
                                     <td class="text-left" style="max-width:220px;">{{ $item->deskripsi ?? '-' }}</td>
 
                                     @if(Auth::user()->role_id == 1)
-                                        <td>{!! $item->toko->nama_toko ?? '<span class="text-muted">Tanpa Toko</span>' !!}</td>
+                                        <td>@if($item->toko) {{ $item->toko->nama_toko }} @else <span class="text-muted">Tanpa Toko</span> @endif</td>
                                     @endif
 
                                     <td>

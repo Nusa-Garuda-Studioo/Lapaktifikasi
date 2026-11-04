@@ -97,7 +97,7 @@
             @if(strip_tags($news->konten) === $news->konten)
                 {!! nl2br(e($news->konten)) !!}
             @else
-                {!! $news->konten !!}
+                {!! $news->clean_konten !!}
             @endif
         </div>
     </div>

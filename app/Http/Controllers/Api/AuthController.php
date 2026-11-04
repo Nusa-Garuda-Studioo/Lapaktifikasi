@@ -119,24 +119,22 @@ class AuthController extends ApiController
             'email' => $email,
             'name' => $request->name,
             'password' => Hash::make($request->password),
-            'profile_picture' => (($email == "g4lihanggoro@gmail.com") ? 'avatar-admin.png' : $this->setIconProfile()),
-            'role_id' => (($email == "g4lihanggoro@gmail.com") ? 1 : 2)
+            'profile_picture' => $this->setIconProfile(),
+            'role_id' => 2
         ]);
 
-        if ($newUser->role_id != 1) {
-            $refCode = $request->input('ref');
-            $referrer = null;
-            if (!empty($refCode)) {
-                $referrer = CustomerModel::where('kode_referral', strtoupper(trim($refCode)))->first();
-            }
-
-            CustomerModel::create([
-                'user_id' => $newUser->id,
-                'nama_customer' => $request->name,
-                'nomor_telepon' => $request->no_whatsapp,
-                'direferensikan_oleh' => $referrer?->id,
-            ]);
+        $refCode = $request->input('ref');
+        $referrer = null;
+        if (!empty($refCode)) {
+            $referrer = CustomerModel::where('kode_referral', strtoupper(trim($refCode)))->first();
         }
+
+        CustomerModel::create([
+            'user_id' => $newUser->id,
+            'nama_customer' => $request->name,
+            'nomor_telepon' => $request->no_whatsapp,
+            'direferensikan_oleh' => $referrer?->id,
+        ]);
 
         // Auto login after register and return token
         $token = $newUser->createToken('API_TOKEN')->plainTextToken;
@@ -144,7 +142,7 @@ class AuthController extends ApiController
         $data = [
             'user' => $newUser,
             'token' => $token,
-            'role' => $newUser->role_id == 1 ? 'admin' : 'customer'
+            'role' => 'customer'
         ];
 
         return $this->sendResponse($data, 'Berhasil mendaftar', 201);

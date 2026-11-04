@@ -44,7 +44,7 @@ class MidtransController extends Controller
             'payload' => $request->all(),
         ]);
 
-        if ($hashed !== $request->signature_key) {
+        if (!hash_equals($hashed, (string) $request->signature_key)) {
             Log::warning('Midtrans webhook invalid signature', ['order_id' => $order_id]);
             return response()->json(['message' => 'Invalid signature'], 403);
         }
@@ -88,6 +88,16 @@ class MidtransController extends Controller
             || ($transaction_status === 'capture' && $fraud_status === 'accept');
 
         if ($isPaymentSuccess) {
+            $grossAmount = (int) $request->gross_amount;
+            if ($grossAmount > 0 && (int) $pembelian->harga_saat_beli !== $grossAmount) {
+                Log::warning('Midtrans webhook rejected: gross_amount mismatch', [
+                    'order_id' => $order_id,
+                    'db_amount' => $pembelian->harga_saat_beli,
+                    'webhook_amount' => $grossAmount,
+                ]);
+                return response()->json(['message' => 'Gross amount mismatch'], 400);
+            }
+
             $this->paymentProcessor->markAsSuccess($pembelian, [
                 'payment_type' => $request->payment_type,
                 'payment_gateway' => 'midtrans',

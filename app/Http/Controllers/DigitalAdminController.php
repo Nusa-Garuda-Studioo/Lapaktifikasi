@@ -176,7 +176,7 @@ class DigitalAdminController extends Controller
             'harga' => 'required|numeric|min:0',
             'deskripsi' => 'nullable',
             'status' => 'required|in:aktif,nonaktif',
-            'file_digital' => 'required|file|max:' . $limit_kb,
+            'file_digital' => 'required|file|mimes:zip,rar,7z,tar,gz,pdf,epub,mobi,doc,docx,xls,xlsx,ppt,pptx,txt,mp3,mp4,wav|max:' . $limit_kb,
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -202,8 +202,13 @@ class DigitalAdminController extends Controller
 
         if ($request->hasFile('file_digital')) {
             $file = $request->file('file_digital');
-            $fileName = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('assets/file_digital'), $fileName);
+            $extension = strtolower($file->getClientOriginalExtension());
+            $fileName = time() . '_' . \Illuminate\Support\Str::random(32) . '.' . $extension;
+            $targetDir = storage_path('app/private/file_digital');
+            if (!file_exists($targetDir)) {
+                @mkdir($targetDir, 0755, true);
+            }
+            $file->move($targetDir, $fileName);
             $data['file_path'] = $fileName;
         }
 
@@ -235,7 +240,7 @@ class DigitalAdminController extends Controller
             'harga' => 'required|numeric|min:0',
             'deskripsi' => 'nullable',
             'status' => 'required|in:aktif,nonaktif',
-            'file_digital' => 'nullable|file|max:' . $limit_kb,
+            'file_digital' => 'nullable|file|mimes:zip,rar,7z,tar,gz,pdf,epub,mobi,doc,docx,xls,xlsx,ppt,pptx,txt,mp3,mp4,wav|max:' . $limit_kb,
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -259,14 +264,22 @@ class DigitalAdminController extends Controller
         $data = $request->only('id_tipe', 'nama_varian', 'harga', 'deskripsi', 'status');
 
         if ($request->hasFile('file_digital')) {
-            // Delete old file
-            if ($varian->file_path && file_exists(public_path('assets/file_digital/' . $varian->file_path))) {
-                @unlink(public_path('assets/file_digital/' . $varian->file_path));
+            // Delete old file from both private storage and legacy public directory
+            if ($varian->file_path) {
+                $oldPrivate = storage_path('app/private/file_digital/' . $varian->file_path);
+                $oldPublic = public_path('assets/file_digital/' . $varian->file_path);
+                if (file_exists($oldPrivate)) @unlink($oldPrivate);
+                if (file_exists($oldPublic)) @unlink($oldPublic);
             }
 
             $file = $request->file('file_digital');
-            $fileName = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('assets/file_digital'), $fileName);
+            $extension = strtolower($file->getClientOriginalExtension());
+            $fileName = time() . '_' . \Illuminate\Support\Str::random(32) . '.' . $extension;
+            $targetDir = storage_path('app/private/file_digital');
+            if (!file_exists($targetDir)) {
+                @mkdir($targetDir, 0755, true);
+            }
+            $file->move($targetDir, $fileName);
             $data['file_path'] = $fileName;
         }
 

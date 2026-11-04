@@ -76,7 +76,7 @@ class WebPushController extends Controller
     public function subscribe(Request $request)
     {
         $validated = $request->validate([
-            'endpoint' => 'required|string',
+            'endpoint' => 'required|url:https',
             'keys.p256dh' => 'required|string',
             'keys.auth' => 'required|string',
             'contentEncoding' => 'nullable|string',
@@ -140,20 +140,10 @@ class WebPushController extends Controller
         }
 
         if (!$subscription) {
-            // Jika belum tersimpan di DB, buat instant subscription dari payload request
-            if ($request->has(['endpoint', 'keys.p256dh', 'keys.auth'])) {
-                $subscription = new PushSubscription([
-                    'endpoint' => $request->input('endpoint'),
-                    'public_key' => $request->input('keys.p256dh'),
-                    'auth_token' => $request->input('keys.auth'),
-                    'content_encoding' => 'aes128gcm',
-                ]);
-            } else {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Tidak ditemukan perangkat aktif yang terdaftar untuk dikirimkan notifikasi.',
-                ], 404);
-            }
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Tidak ditemukan perangkat aktif yang terdaftar untuk dikirimkan notifikasi. Silakan aktifkan notifikasi terlebih dahulu.',
+            ], 404);
         }
 
         try {

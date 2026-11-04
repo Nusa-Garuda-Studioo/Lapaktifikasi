@@ -60,12 +60,28 @@
                     <form method="post" action="{{ url('proses_ganti_password') }}">
                         @csrf
 
+                        <!-- Password Lama -->
+                        <div class="mono-form-group">
+                            <label class="mono-form-label" for="password_lama">Password Saat Ini (Lama)</label>
+                            <div class="mono-input-wrapper">
+                                <input type="password" class="mono-input" id="password_lama" name="password_lama"
+                                    autocomplete="current-password" required>
+                                <i class="bi bi-key-fill mono-input-icon"></i>
+                            </div>
+                            @if ($errors->has('password_lama'))
+                                <div class="mono-warning">
+                                    <i class="bi bi-exclamation-circle-fill"></i>
+                                    <span>{{ ucfirst($errors->first('password_lama')) }}</span>
+                                </div>
+                            @endif
+                        </div>
+
                         <!-- Password Baru -->
                         <div class="mono-form-group">
                             <label class="mono-form-label" for="password_baru">Password Baru</label>
                             <div class="mono-input-wrapper">
                                 <input type="password" class="mono-input" id="password_baru" name="password_baru"
-                                    autocomplete="off" value="{{ old('password_baru') }}">
+                                    autocomplete="new-password" value="{{ old('password_baru') }}" required>
                                 <i class="bi bi-shield-lock-fill mono-input-icon"></i>
                             </div>
                             @if ($errors->has('password_baru'))
@@ -81,8 +97,8 @@
                             <label class="mono-form-label" for="konfirmasi_password_baru">Konfirmasi Password Baru</label>
                             <div class="mono-input-wrapper">
                                 <input type="password" class="mono-input" id="konfirmasi_password_baru"
-                                    name="konfirmasi_password_baru" autocomplete="off"
-                                    value="{{ old('konfirmasi_password_baru') }}">
+                                    name="konfirmasi_password_baru" autocomplete="new-password"
+                                    value="{{ old('konfirmasi_password_baru') }}" required>
                                 <i class="bi bi-shield-fill-check mono-input-icon"></i>
                             </div>
                             @if ($errors->has('konfirmasi_password_baru'))

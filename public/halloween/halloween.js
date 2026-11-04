@@ -4,7 +4,7 @@
  * or false to completely revert to original look.
  */
 
-const HALLOWEEN_ENABLED = true;
+const HALLOWEEN_ENABLED = false;
 
 (function () {
     'use strict';

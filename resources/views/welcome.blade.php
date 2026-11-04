@@ -109,60 +109,14 @@
                 </div> -->
             </div>
             <div class="hero-visual">
-                <div class="hero-3card-container">
-                    <!-- Card 1: Left -->
-                    <div class="glass-card hero-3card">
-                        <div class="hero-3card-img">
-                            <img src="https://cdn-icons-png.flaticon.com/512/1005/1005141.png" alt="Source Code">
-                        </div>
-                        <h5>Source Code</h5>
-                        <div class="hero-3card-lines">
-                            <span></span>
-                            <span></span>
-                        </div>
-                        <a href="{{ route('premium.katalog', ['kategori' => 'digital']) }}" class="btn-3card">Beli</a>
-                    </div>
-
-                    <!-- Card 2: Middle (Featured) -->
-                    <div class="glass-card hero-3card hero-3card-featured">
-                        <div class="hero-3card-img">
-                            <img src="https://cdn-icons-png.flaticon.com/512/3670/3670157.png" alt="Spotify & Netflix">
-                        </div>
-                        <h5>Spotify &amp; Netflix</h5>
-                        <div class="hero-3card-lines">
-                            <span></span>
-                            <span></span>
-                        </div>
-                        <a href="{{ route('premium.katalog', ['kategori' => 'premium']) }}" class="btn-3card">Beli</a>
-                    </div>
-
-                    <!-- Card 3: Right -->
-                    <div class="glass-card hero-3card">
-                        <div class="hero-3card-img">
-                            <img src="https://cdn-icons-png.flaticon.com/512/2970/2970785.png" alt="Creative Assets">
-                        </div>
-                        <h5>Creative Assets</h5>
-                        <div class="hero-3card-lines">
-                            <span></span>
-                            <span></span>
-                        </div>
-                        <a href="{{ route('premium.katalog', ['kategori' => 'digital']) }}" class="btn-3card">Beli</a>
-                    </div>
-                </div>
-
-                <div class="hero-cards-mini">
-                    <div class="glass-card mini-card">
-                        <div class="num">10+</div>
-                        <div class="lbl">Kategori Produk</div>
-                    </div>
-                    <div class="glass-card mini-card">
-                        <div class="num">2.5K+</div>
-                        <div class="lbl">Pengguna Aktif</div>
-                    </div>
-                    <div class="glass-card mini-card">
-                        <div class="num">100%</div>
-                        <div class="lbl">Legal &amp; Aman</div>
-                    </div>
+                <div class="hero-img-wrapper">
+                    <div class="hero-img-glow"></div>
+                    <img src="{{ asset('assets/img/heroatas.png') }}" 
+                         alt="{{ isset($websiteSettings) && $websiteSettings->site_name ? $websiteSettings->site_name : 'Lapaktifikasi' }} - Produk Digital & Akun Premium" 
+                         class="hero-banner-img"
+                         width="1080"
+                         height="1350"
+                         fetchpriority="high">
                 </div>
             </div>
         </div>
