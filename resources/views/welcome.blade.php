@@ -6,7 +6,7 @@
 @section('og_image', isset($websiteSettings) && $websiteSettings->logo_path ? asset($websiteSettings->logo_path) : asset('assets/img/brand_ambassador.jpg'))
 
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('css/pages/welcome.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/pages/welcome.css') }}?v={{ file_exists(public_path('css/pages/welcome.css')) ? filemtime(public_path('css/pages/welcome.css')) : time() }}">
 @endpush
 
 @push('schema')
@@ -108,14 +108,16 @@
                     <div class="trust-item"><i class="bi bi-check-circle-fill"></i> Pembayaran QRIS &amp; Bank</div>
                 </div> -->
             </div>
-            <div class="hero-visual">
-                <div class="hero-img-wrapper">
+            <div class="hero-visual" style="flex: 0 0 auto; max-width: 360px; width: 100%; margin: 0 auto; display: flex; justify-content: center; align-items: center;">
+                <div class="hero-img-wrapper" style="position: relative; width: 100%; max-width: 340px; aspect-ratio: 4 / 5; display: flex; align-items: center; justify-content: center;">
                     <div class="hero-img-glow"></div>
                     <img src="{{ asset('assets/img/heroatas.png') }}" 
                          alt="{{ isset($websiteSettings) && $websiteSettings->site_name ? $websiteSettings->site_name : 'Lapaktifikasi' }} - Produk Digital & Akun Premium" 
                          class="hero-banner-img"
-                         width="1080"
-                         height="1350"
+                         width="340"
+                         height="425"
+                         style="width: 100%; height: auto; max-height: 425px; aspect-ratio: 4 / 5; object-fit: contain; display: block;"
+                         loading="eager"
                          fetchpriority="high">
                 </div>
             </div>
