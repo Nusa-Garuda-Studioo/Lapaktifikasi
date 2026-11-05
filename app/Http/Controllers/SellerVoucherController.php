@@ -11,9 +11,20 @@ class SellerVoucherController extends Controller
 {
     private function getSellerToko()
     {
-        $toko = Toko::where('user_id', Auth::id())->first();
+        $user = Auth::user();
+        $toko = Toko::where('user_id', $user->id)->first();
         if (!$toko) {
-            abort(403, 'Akses ditolak. Profil Toko tidak ditemukan.');
+            $namaToko = $user->name ? $user->name . ' Store' : 'Toko Seller #' . $user->id;
+            $toko = Toko::create([
+                'user_id' => $user->id,
+                'nama_toko' => $namaToko,
+                'slug' => Toko::generateUniqueSlug($namaToko),
+                'no_telp' => '-',
+                'akun_telegram' => '@' . ($user->telegram_username ?: 'seller' . $user->id),
+                'informasi_toko' => 'Toko resmi ' . ($user->name ?: 'Seller'),
+                'saldo' => 0,
+                'status' => 'aktif',
+            ]);
         }
         return $toko;
     }

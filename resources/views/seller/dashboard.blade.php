@@ -166,8 +166,8 @@
                     <tr>
                         <td class="font-bold text-indigo-950">#{{ str_pad($t->id, 5, '0', STR_PAD_LEFT) }}</td>
                         <td class="text-xs text-gray-700 font-medium">
-                            {{ $t->user->name ?: 'Customer' }}
-                            <small class="text-gray-400 block">{{ $t->user->email }}</small>
+                            {{ $t->user?->name ?: 'Customer' }}
+                            <small class="text-gray-400 block">{{ $t->user?->email ?? '-' }}</small>
                         </td>
                         <td class="text-xs font-semibold text-gray-800">{{ \Illuminate\Support\Str::limit($t->judul, 40) }}</td>
                         <td class="text-xs text-gray-500">{{ $t->created_at->format('d M Y H:i') }}</td>

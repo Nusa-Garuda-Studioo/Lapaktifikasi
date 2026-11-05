@@ -43,7 +43,7 @@
                 <a href="{{ route('premium.katalog') }}" class="btn-nav-signup"><i class="bi bi-cart3"></i> Belanja</a>
             @endif
         @else
-            <a href="{{ url('/login') }}" class="btn-nav-login" onclick="if(typeof openModal === 'function'){ openModal(); return false; }">Masuk</a>
+            <a href="{{ url('/login') }}" class="btn-nav-login">Masuk</a>
             <a href="{{ url('/pendaftaran') }}" class="btn-nav-signup">Daftar Gratis</a>
         @endauth
     </div>
@@ -91,7 +91,7 @@
                 <a href="{{ route('premium.katalog') }}" class="btn-nav-signup" onclick="closeMobileMenu()"><i class="bi bi-cart3"></i> Belanja</a>
             @endif
         @else
-            <a href="{{ url('/login') }}" class="btn-nav-login" onclick="closeMobileMenu(); if(typeof openModal === 'function'){ openModal(); return false; }">Masuk</a>
+            <a href="{{ url('/login') }}" class="btn-nav-login" onclick="closeMobileMenu()">Masuk</a>
             <a href="{{ url('/pendaftaran') }}" class="btn-nav-signup" onclick="closeMobileMenu()">Daftar Gratis</a>
         @endauth
     </div>

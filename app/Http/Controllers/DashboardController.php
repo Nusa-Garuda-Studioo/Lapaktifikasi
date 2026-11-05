@@ -116,10 +116,21 @@ class DashboardController extends Controller
 
     public function seller_index(Request $request)
     {
-        $user_id = Auth::id();
+        $user = Auth::user();
+        $user_id = $user->id;
         $toko = Toko::where('user_id', $user_id)->first();
         if (!$toko) {
-            abort(404, 'Toko Anda tidak ditemukan. Hubungi Admin.');
+            $namaToko = $user->name ? $user->name . ' Store' : 'Toko Seller #' . $user_id;
+            $toko = Toko::create([
+                'user_id' => $user_id,
+                'nama_toko' => $namaToko,
+                'slug' => Toko::generateUniqueSlug($namaToko),
+                'no_telp' => '-',
+                'akun_telegram' => '@' . ($user->telegram_username ?: 'seller' . $user_id),
+                'informasi_toko' => 'Toko resmi ' . ($user->name ?: 'Seller'),
+                'saldo' => 0,
+                'status' => 'aktif',
+            ]);
         }
         $toko_id = $toko->id_toko;
 
@@ -245,10 +256,21 @@ class DashboardController extends Controller
 
     public function seller_mutasi()
     {
-        $user_id = Auth::id();
+        $user = Auth::user();
+        $user_id = $user->id;
         $toko = Toko::where('user_id', $user_id)->first();
         if (!$toko) {
-            abort(404, 'Toko Anda tidak ditemukan.');
+            $namaToko = $user->name ? $user->name . ' Store' : 'Toko Seller #' . $user_id;
+            $toko = Toko::create([
+                'user_id' => $user_id,
+                'nama_toko' => $namaToko,
+                'slug' => Toko::generateUniqueSlug($namaToko),
+                'no_telp' => '-',
+                'akun_telegram' => '@' . ($user->telegram_username ?: 'seller' . $user_id),
+                'informasi_toko' => 'Toko resmi ' . ($user->name ?: 'Seller'),
+                'saldo' => 0,
+                'status' => 'aktif',
+            ]);
         }
         $toko_id = $toko->id_toko;
 

@@ -12,9 +12,20 @@ class SellerTokoController extends Controller
 {
     public function index()
     {
-        $toko = Toko::where('user_id', Auth::id())->first();
+        $user = Auth::user();
+        $toko = Toko::where('user_id', $user->id)->first();
         if (!$toko) {
-            abort(404, 'Toko Anda tidak ditemukan. Hubungi Admin.');
+            $namaToko = $user->name ? $user->name . ' Store' : 'Toko Seller #' . $user->id;
+            $toko = Toko::create([
+                'user_id' => $user->id,
+                'nama_toko' => $namaToko,
+                'slug' => Toko::generateUniqueSlug($namaToko),
+                'no_telp' => '-',
+                'akun_telegram' => '@' . ($user->telegram_username ?: 'seller' . $user->id),
+                'informasi_toko' => 'Toko resmi ' . ($user->name ?: 'Seller'),
+                'saldo' => 0,
+                'status' => 'aktif',
+            ]);
         }
         return view('seller.profil', compact('toko'));
     }
@@ -78,7 +89,22 @@ class SellerTokoController extends Controller
 
     public function badges()
     {
-        $toko = Toko::with('badges')->where('user_id', Auth::id())->firstOrFail();
+        $user = Auth::user();
+        $toko = Toko::with('badges')->where('user_id', $user->id)->first();
+        if (!$toko) {
+            $namaToko = $user->name ? $user->name . ' Store' : 'Toko Seller #' . $user->id;
+            $toko = Toko::create([
+                'user_id' => $user->id,
+                'nama_toko' => $namaToko,
+                'slug' => Toko::generateUniqueSlug($namaToko),
+                'no_telp' => '-',
+                'akun_telegram' => '@' . ($user->telegram_username ?: 'seller' . $user->id),
+                'informasi_toko' => 'Toko resmi ' . ($user->name ?: 'Seller'),
+                'saldo' => 0,
+                'status' => 'aktif',
+            ]);
+            $toko->load('badges');
+        }
         $allBadges = \App\Models\SellerBadge::all();
 
         $rating = (float) ($toko->rating_rata_rata ?? 0);

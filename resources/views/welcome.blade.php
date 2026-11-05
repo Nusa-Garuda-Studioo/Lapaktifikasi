@@ -666,7 +666,7 @@
                     @else
                         <a href="{{ url('/pendaftaran') }}" class="btn-primary"><i class="bi bi-person-plus-fill"></i>
                             Daftar Gratis Sekarang</a>
-                        <a href="#" class="btn-secondary" onclick="openModal(); return false;"><i
+                        <a href="{{ url('/login') }}" class="btn-secondary"><i
                                 class="bi bi-box-arrow-in-right"></i> Sudah Punya Akun</a>
                     @endauth
                 </div>

@@ -58,6 +58,11 @@ class CustomerModel extends Model
         return $this->hasMany(VoucherKlaim::class, 'id_customer', 'id');
     }
 
+    public function pembelian(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Pembelian::class, 'id_customer', 'id');
+    }
+
     public function tierLogs(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(CustomerTierLog::class, 'id_customer', 'id');
