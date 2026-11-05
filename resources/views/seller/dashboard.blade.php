@@ -44,7 +44,7 @@
             <p class="text-xs text-red-700 leading-relaxed mb-3">
                 Anda memblokir bot Telegram Lapaktifikasi pada {{ $sellerUser->telegram_blocked_at->translatedFormat('d M Y, H:i') }} WIB. Status bot yang terblokir akan menyebabkan toko dan produk Anda dinonaktifkan dari katalog publik. Harap segera buka blokir bot kami di aplikasi Telegram Anda.
             </p>
-            <a href="{{ url('/profile_customer/' . $sellerUser->id) }}#telegram-section" class="inline-flex items-center gap-1.5 px-4 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg transition-colors">
+            <a href="{{ url('/seller/profil#telegram') }}" class="inline-flex items-center gap-1.5 px-4 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg transition-colors">
                 <i class="bi bi-gear-fill"></i> Kelola Tautan Telegram
             </a>
         </div>
@@ -68,7 +68,7 @@
                 @endif
             </p>
             <div class="flex items-center gap-2 flex-wrap">
-                <a href="{{ url('/profile_customer/' . $sellerUser->id) }}#telegram-section" class="inline-flex items-center gap-1.5 px-4 py-1.5 {{ $toko->status === 'nonaktif' ? 'bg-red-600 hover:bg-red-700' : 'bg-amber-700 hover:bg-amber-800' }} text-white text-xs font-bold rounded-lg transition-colors">
+                <a href="{{ url('/seller/profil#telegram') }}" class="inline-flex items-center gap-1.5 px-4 py-1.5 {{ $toko->status === 'nonaktif' ? 'bg-red-600 hover:bg-red-700' : 'bg-amber-700 hover:bg-amber-800' }} text-white text-xs font-bold rounded-lg transition-colors">
                     <i class="bi bi-telegram"></i> Tautkan Telegram Sekarang
                 </a>
             </div>

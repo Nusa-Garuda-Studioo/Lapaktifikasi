@@ -56,7 +56,31 @@ class CommandRouter
     protected function handleStart(int|string $chatId, string $args, array $message): void
     {
         if ($args === '') {
-            $reply = "Halo! Untuk menautkan akun Lapaktifikasi Anda dengan bot Telegram ini, silakan buka menu profil atau tiket laporan di website Lapaktifikasi, lalu klik tombol tautkan Telegram.";
+            $user = null;
+            try {
+                $user = User::where('telegram_chat_id', (int) $chatId)->first();
+            } catch (\Throwable $e) {
+                $user = null;
+            }
+
+            if ($user && method_exists($user, 'isSeller') && $user->isSeller()) {
+                $reply = "Halo <b>" . TelegramClient::escape($user->name ?: 'Seller') . "</b>! Akun Seller Lapaktifikasi Anda sudah terhubung dengan bot ini.\n\n" .
+                         "Untuk mengelola pengaturan integrasi bot, silakan buka menu <b>Profil Toko</b> (<code>/seller/profil</code>) di dashboard seller Anda.\n\n" .
+                         "Ketik /bantuan untuk melihat panduan atau /putus untuk memutuskan tautan akun.";
+            } elseif ($user && method_exists($user, 'isAdmin') && $user->isAdmin()) {
+                $reply = "Halo <b>" . TelegramClient::escape($user->name ?: 'Admin') . "</b>! Akun Admin Lapaktifikasi Anda sudah terhubung dengan bot ini.\n\n" .
+                         "Pengaturan integrasi dapat diakses melalui menu <b>Setting Website</b> (<code>/setting_website</code>) di dashboard admin.\n\n" .
+                         "Ketik /bantuan untuk melihat panduan atau /putus untuk memutuskan tautan akun.";
+            } elseif ($user) {
+                $reply = "Halo <b>" . TelegramClient::escape($user->name ?: 'Pelanggan') . "</b>! Akun Lapaktifikasi Anda sudah terhubung.\n\n" .
+                         "Ketik /tiket untuk melihat tiket garansi aktif, /lapor untuk membuat laporan kendala, atau /putus untuk memutuskan tautan akun.";
+            } else {
+                $reply = "Halo! Untuk menautkan akun Lapaktifikasi Anda dengan bot Telegram ini:\n\n" .
+                         "• <b>Seller:</b> Buka dashboard lalu masuk ke menu <b>Profil Toko</b> (<code>/seller/profil</code>), lalu klik tombol <b>Buat Tautan Telegram</b>.\n" .
+                         "• <b>Customer:</b> Buka menu <b>Profil Saya</b> di website, lalu klik tombol <b>Buat Tautan Telegram</b>.\n" .
+                         "• <b>Admin:</b> Buka menu <b>Setting Website</b> (<code>/setting_website</code>).\n\n" .
+                         "Setelah tautan dibuat, klik link yang diberikan atau ketik <code>/start &lt;token&gt;</code> di chat ini.";
+            }
             $this->client->sendMessage($chatId, $reply);
             return;
         }

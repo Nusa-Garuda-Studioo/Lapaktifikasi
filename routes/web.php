@@ -271,6 +271,10 @@ Route::middleware('auth')->group(function () {
         Route::post('/admin/webpush/broadcast', [\App\Http\Controllers\WebPushController::class, 'broadcast'])->name('admin.webpush.broadcast');
         Route::delete('/admin/webpush/subscription/{id}', [\App\Http\Controllers\WebPushController::class, 'deleteSubscription'])->name('admin.webpush.subscription.delete');
         Route::post('/admin/webpush/device/{id}/test', [\App\Http\Controllers\WebPushController::class, 'sendTestToDevice'])->name('admin.webpush.device.test');
+
+        // Admin Telegram Integration
+        Route::post('/admin/telegram/link-token', [TelegramController::class, 'createLinkToken'])->name('admin.telegram.link_token');
+        Route::post('/admin/telegram/unlink', [TelegramController::class, 'unlink'])->name('admin.telegram.unlink');
     });
 
     // Premium Customer Routes
@@ -286,6 +290,11 @@ Route::middleware('auth')->group(function () {
         Route::post('/premium/review/{order_id}', [PremiumCustomerController::class, 'reviewStore'])->name('premium.review.store');
         Route::get('/premium/laporan', [LaporanController::class, 'index'])->name('customer.laporan');
         Route::post('/premium/laporan', [LaporanController::class, 'store'])->name('customer.laporan.store');
+
+        // Customer Telegram Integration
+        Route::post('/customer/telegram/link-token', [TelegramController::class, 'createLinkToken'])->name('customer.telegram.link_token');
+        Route::post('/customer/telegram/unlink', [TelegramController::class, 'unlink'])->name('customer.telegram.unlink');
+        Route::post('/customer/telegram/channel-preference', [TelegramController::class, 'updateChannelPreference'])->name('customer.telegram.channel_preference');
     });
 
     // Seller Routes
@@ -294,9 +303,13 @@ Route::middleware('auth')->group(function () {
         Route::get('/seller/mutasi', [DashboardController::class, 'seller_mutasi']);
 
         // Seller Toko Profil & Badges
-        Route::get('/seller/profil', [SellerTokoController::class, 'index']);
+        Route::get('/seller/profil', [SellerTokoController::class, 'index'])->name('seller.profil');
         Route::post('/seller/profil/update', [SellerTokoController::class, 'update']);
         Route::get('/seller/badges', [SellerTokoController::class, 'badges'])->name('seller.badges');
+
+        // Seller Telegram Integration
+        Route::post('/seller/telegram/link-token', [TelegramController::class, 'createLinkToken'])->name('seller.telegram.link_token');
+        Route::post('/seller/telegram/unlink', [TelegramController::class, 'unlink'])->name('seller.telegram.unlink');
 
         // Seller Voucher CRUD
         Route::get('/seller/voucher', [SellerVoucherController::class, 'index'])->name('seller.voucher.index');

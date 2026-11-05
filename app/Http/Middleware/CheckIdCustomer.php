@@ -16,10 +16,19 @@ class CheckIdCustomer
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $user = $request->user();
+        $user = $request->user() ?? Auth::user();
+
+        if ($user && method_exists($user, 'isSeller') && $user->isSeller()) {
+            return redirect('/seller/profil');
+        }
+
+        if ($user && method_exists($user, 'isAdmin') && $user->isAdmin()) {
+            return redirect()->route('admin.setting_website');
+        }
+
         $profileId = (int) $request->route('id');
 
-        if ($user->id !== $profileId || Auth::user()->role_id == 1) {
+        if (!$user || $user->id !== $profileId || (int) $user->role_id === 1) {
             abort(403, 'Forbidden access.');
         }
         return $next($request);

@@ -385,5 +385,106 @@ class TelegramAccountLinkTest extends TestCase
         $customer->refresh();
         $this->assertNull($customer->telegram_chat_id);
     }
+
+    public function test_seller_can_see_telegram_card_on_seller_profil_page(): void
+    {
+        $seller = User::factory()->seller()->create();
+        $toko = Toko::create([
+            'user_id' => $seller->id,
+            'nama_toko' => 'Toko Seller Telegram UI',
+            'no_telp' => '081234567890',
+            'akun_telegram' => 'seller_ui_test',
+            'status' => 'aktif',
+        ]);
+
+        $response = $this->actingAs($seller)->get('/seller/profil');
+        $response->assertStatus(200);
+        $response->assertSee('id="telegram"', false);
+        $response->assertSee('Hubungkan Akun Telegram Seller');
+        // Channel preference must be hidden from seller
+        $response->assertDontSee('Preferensi Saluran Notifikasi Tiket Laporan');
+    }
+
+    public function test_seller_opening_customer_profile_is_redirected_to_seller_profil(): void
+    {
+        $seller = User::factory()->seller()->create();
+
+        $response = $this->actingAs($seller)->get('/profile_customer/' . $seller->id);
+        $response->assertRedirect('/seller/profil');
+    }
+
+    public function test_admin_opening_customer_profile_is_redirected_to_setting_website(): void
+    {
+        $admin = User::factory()->admin()->create();
+
+        $response = $this->actingAs($admin)->get('/profile_customer/' . $admin->id);
+        $response->assertRedirect(route('admin.setting_website'));
+    }
+
+    public function test_customer_can_see_telegram_card_and_channel_preferences_on_customer_profile(): void
+    {
+        $customer = User::factory()->create();
+
+        $response = $this->actingAs($customer)->get('/profile_customer/' . $customer->id);
+        $response->assertStatus(200);
+        $response->assertSee('id="telegram-section"', false);
+        $response->assertSee('Hubungkan Telegram');
+        $response->assertSee('Preferensi Saluran Notifikasi Tiket Laporan');
+        $response->assertSee('name="notif_channel_laporan"', false);
+    }
+
+    public function test_seller_can_create_link_token_and_unlink_via_seller_endpoints(): void
+    {
+        $seller = User::factory()->seller()->create();
+        $this->actingAs($seller);
+
+        // 1. Create token via seller route
+        $response = $this->postJson(route('seller.telegram.link_token'));
+        $response->assertStatus(200)
+            ->assertJsonStructure(['status', 'token', 'url', 'expires_at']);
+
+        // 2. Unlink via seller route
+        $seller->update(['telegram_chat_id' => 999888]);
+        $responseUnlink = $this->postJson(route('seller.telegram.unlink'));
+        $responseUnlink->assertStatus(200)
+            ->assertJson(['status' => 'success']);
+
+        $seller->refresh();
+        $this->assertNull($seller->telegram_chat_id);
+    }
+
+    public function test_admin_can_see_telegram_card_and_group_info_on_setting_website(): void
+    {
+        $admin = User::factory()->admin()->create();
+
+        $response = $this->actingAs($admin)->get(route('admin.setting_website'));
+        $response->assertStatus(200);
+        $response->assertSee('id="telegram"', false);
+        $response->assertSee('Integrasi Akun Telegram Admin');
+        $response->assertSee('TELEGRAM_ADMIN_GROUP_ID');
+    }
+
+    public function test_bot_start_without_token_directs_seller_to_seller_profil(): void
+    {
+        $seller = User::factory()->seller()->withTelegram(777666, 'seller_chat_bot')->create();
+
+        $called = false;
+        $mockClient = Mockery::mock(TelegramClient::class);
+        $mockClient->shouldReceive('sendMessage')
+            ->once()
+            ->with(777666, Mockery::on(function ($text) use (&$called) {
+                $called = str_contains($text, '/seller/profil') && str_contains($text, 'Profil Toko');
+                return $called;
+            }))
+            ->andReturn(['ok' => true]);
+
+        $router = new \App\Services\Telegram\CommandRouter($mockClient);
+        $router->handle([
+            'chat' => ['id' => 777666, 'type' => 'private'],
+            'text' => '/start',
+        ]);
+
+        $this->assertTrue($called);
+    }
 }
 

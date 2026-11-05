@@ -13,6 +13,14 @@ class CustomerController extends Controller
 {
     public function index($id)
     {
+        $currentUser = Auth::user();
+        if ($currentUser && method_exists($currentUser, 'isSeller') && $currentUser->isSeller()) {
+            return redirect('/seller/profil');
+        }
+        if ($currentUser && method_exists($currentUser, 'isAdmin') && $currentUser->isAdmin()) {
+            return redirect()->route('admin.setting_website');
+        }
+
         $user = User::find($id);
 
         if ($user && $user->role_id != 1) {

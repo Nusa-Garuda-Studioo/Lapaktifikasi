@@ -377,6 +377,13 @@
     </div>
 </div>
 
+<!-- Card Integrasi Telegram Admin -->
+<div class="row mt-4">
+    <div class="col-12">
+        <x-telegram-link-card :user="auth()->user()" role="admin" card-id="telegram" />
+    </div>
+</div>
+
 @push('scripts')
 <script>
     function registerCurrentAdminDevice() {

@@ -127,6 +127,11 @@
                 </form>
             </div>
         </div>
+
+        <!-- Card 2: Hubungkan Akun Telegram Seller -->
+        <div class="mt-4">
+            <x-telegram-link-card :user="auth()->user()" role="seller" card-id="telegram" />
+        </div>
     </div>
 </div>
 

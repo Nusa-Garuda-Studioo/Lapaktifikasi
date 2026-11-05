@@ -42,6 +42,21 @@
                             Profil Toko
                         </a>
                     </li>
+                    <li class="sidebar-menu-item">
+                        <a href="{{ url('seller/profil#telegram') }}" class="flex items-center justify-between w-full">
+                            <span class="flex items-center gap-x-2">
+                                <i class="bi bi-telegram text-lg text-sky-500"></i>
+                                Integrasi Telegram
+                            </span>
+                            @if(auth()->check() && auth()->user()->hasTelegram())
+                                <span class="px-2 py-0.5 text-[10px] font-semibold bg-emerald-100 text-emerald-800 rounded-full">Aktif</span>
+                            @elseif(auth()->check() && auth()->user()->telegram_blocked_at)
+                                <span class="px-2 py-0.5 text-[10px] font-semibold bg-rose-100 text-rose-800 rounded-full">Diblokir</span>
+                            @else
+                                <span class="px-2 py-0.5 text-[10px] font-semibold bg-amber-100 text-amber-800 rounded-full">Belum</span>
+                            @endif
+                        </a>
+                    </li>
                     <li class="sidebar-menu-item @if(Request::path() == 'seller/badges') active @endif">
                         <a href="{{ route('seller.badges') }}">
                             <i class="bi bi-patch-check text-lg"></i>
