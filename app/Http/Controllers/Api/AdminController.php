@@ -685,7 +685,16 @@ class AdminController extends ApiController
         if ($validator->fails()) return $this->sendError('Validasi gagal', $validator->errors()->toArray(), 422);
 
         $laporan = Laporan::findOrFail($id);
+        $oldStatus = $laporan->status;
         $laporan->update(['status' => $request->status]);
+
+        if ($oldStatus !== $request->status) {
+            if ($request->status === 'selesai') {
+                app(\App\Services\Telegram\NotificationRouter::class)->notifyTicketCompleted($laporan);
+            } else {
+                app(\App\Services\Telegram\NotificationRouter::class)->notifyTicketStatusUpdated($laporan, $oldStatus, $request->status);
+            }
+        }
 
         return $this->sendResponse($laporan, 'Status laporan berhasil diubah');
     }

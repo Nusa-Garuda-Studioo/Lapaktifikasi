@@ -19,6 +19,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'callback/*',
             'api/callback/*',
             'payment/*/callback',
+            'api/telegram/webhook',
+            'telegram/webhook',
         ]);
 
         $middleware->redirectGuestsTo(fn () => route('login'));
@@ -38,6 +40,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'only.seller'        => \App\Http\Middleware\OnlySeller::class,
             'check.maintenance'  => \App\Http\Middleware\CheckMaintenanceMode::class,
             'check.banned'       => \App\Http\Middleware\CheckBannedUser::class,
+            'telegram.webhook'   => \App\Http\Middleware\VerifyTelegramWebhook::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

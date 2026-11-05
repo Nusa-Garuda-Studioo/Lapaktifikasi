@@ -9,6 +9,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use App\Enums\Role;
 
 
 class User extends Authenticatable
@@ -27,7 +29,12 @@ class User extends Authenticatable
         'profile_picture',
         'role_id',
         'is_banned',
-        'banned_reason'
+        'banned_reason',
+        'telegram_chat_id',
+        'telegram_username',
+        'telegram_linked_at',
+        'telegram_blocked_at',
+        'notif_channel_laporan',
     ];
 
     /**
@@ -38,6 +45,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'telegram_chat_id',
     ];
 
     /**
@@ -49,7 +57,54 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'telegram_linked_at' => 'datetime',
+            'telegram_blocked_at' => 'datetime',
+            'telegram_chat_id' => 'integer',
         ];
+    }
+
+    /**
+     * Mengetahui apakah user telah menautkan akun Telegram dan tidak memblokir bot.
+     */
+    public function hasTelegram(): bool
+    {
+        return !empty($this->telegram_chat_id) && is_null($this->telegram_blocked_at);
+    }
+
+    /**
+     * Cek apakah user memiliki role Seller.
+     */
+    public function isSeller(): bool
+    {
+        return (int) $this->role_id === Role::SELLER->value;
+    }
+
+    /**
+     * Cek apakah user memiliki role Admin.
+     */
+    public function isAdmin(): bool
+    {
+        return (int) $this->role_id === Role::ADMIN->value;
+    }
+
+    public function telegramLinkTokens(): HasMany
+    {
+        return $this->hasMany(TelegramLinkToken::class, 'user_id');
+    }
+
+    public function assignedLaporan(): HasMany
+    {
+        return $this->hasMany(Laporan::class, 'assigned_to');
+    }
+
+    public function laporanPesan(): HasMany
+    {
+        return $this->hasMany(LaporanPesan::class, 'sender_user_id');
+    }
+
+    public function toko(): HasOne
+    {
+        return $this->hasOne(Toko::class, 'user_id', 'id');
     }
 
     public function customer(): HasMany

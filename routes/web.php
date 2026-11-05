@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\TelegramController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PengaturanController;
 use App\Http\Controllers\PembayaranController;
@@ -122,6 +123,12 @@ Route::middleware('auth')->group(function () {
     Route::controller(CustomerController::class)->group(function () {
         Route::get('/profile_customer/{id}', 'index')->middleware('check.id.customer');
         Route::post('/update_profile', 'update_profile');
+    });
+
+    Route::controller(TelegramController::class)->prefix('telegram')->name('telegram.')->group(function () {
+        Route::post('/link-token', 'createLinkToken')->name('link_token');
+        Route::post('/unlink', 'unlink')->name('unlink');
+        Route::post('/channel-preference', 'updateChannelPreference')->name('channel_preference');
     });
 
     Route::controller(PengaturanController::class)->group(function () {
@@ -305,6 +312,10 @@ Route::middleware('auth')->group(function () {
         // Seller Product CRUD (digital only)
         Route::resource('menu_produk_digital', ProductDigitalController::class, ['except' => ['index', 'show']]);
     });
+
+    // Thread Percakapan Tiket Laporan (Dapat diakses oleh Customer, Seller, dan Admin yang berwenang)
+    Route::get('/premium/laporan/{id}', [LaporanController::class, 'show'])->name('laporan.show');
+    Route::post('/premium/laporan/{id}/pesan', [LaporanController::class, 'store_pesan'])->name('laporan.pesan.store');
 
     Route::get('/logout', [AuthController::class, 'logout']);
 });

@@ -21,6 +21,10 @@ Route::middleware('throttle:webhook_rate_limit')->group(function () {
     Route::post('/callback/tripay', [\App\Http\Controllers\TriPayController::class, 'callback']);
 });
 
+// Telegram Webhook
+Route::post('/telegram/webhook', [\App\Http\Controllers\TelegramWebhookController::class, 'handle'])
+    ->middleware(\App\Http\Middleware\VerifyTelegramWebhook::class);
+
 // API V1
 Route::prefix('v1')->namespace('App\Http\Controllers\Api')->group(function () {
     

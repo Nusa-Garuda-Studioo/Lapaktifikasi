@@ -25,16 +25,36 @@ class Toko extends Model
         'komisi_override',
         'saldo',
         'status',
+        'telegram_grace_due_at',
         'is_banned',
         'banned_reason',
         'slug',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'telegram_grace_due_at' => 'datetime',
+        ];
+    }
 
     protected static function booted()
     {
         static::creating(function ($toko) {
             if (empty($toko->slug)) {
                 $toko->slug = static::generateUniqueSlug($toko->nama_toko ?? 'toko');
+            }
+
+            // Toko seller baru tidak boleh berstatus aktif tayang sebelum menautkan akun Telegram
+            if (!empty($toko->user_id)) {
+                $user = User::find($toko->user_id);
+                if ($user && !$user->hasTelegram()) {
+                    $toko->status = 'nonaktif';
+                    if (empty($toko->telegram_grace_due_at)) {
+                        $graceDays = SettingWebsite::getCached()?->telegram_seller_grace_days ?? 14;
+                        $toko->telegram_grace_due_at = now()->addDays($graceDays);
+                    }
+                }
             }
         });
 

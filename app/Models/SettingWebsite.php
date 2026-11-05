@@ -25,6 +25,8 @@ class SettingWebsite extends Model
         'is_midtrans_active',
         'is_tripay_active',
         'is_pakasir_active',
+        'telegram_seller_grace_days',
+        'sla_respon_jam',
     ];
 
     protected static function booted(): void
@@ -44,6 +46,7 @@ class SettingWebsite extends Model
             'is_midtrans_active' => 'boolean',
             'is_tripay_active' => 'boolean',
             'is_pakasir_active' => 'boolean',
+            'telegram_seller_grace_days' => 'integer',
         ];
     }
 

@@ -19,6 +19,75 @@
 <div class="row">
     <!-- Form Tambah Laporan -->
     <div class="col-12 col-lg-5">
+        <!-- Card Integrasi Telegram & Saluran Notifikasi -->
+        @php
+            $currentUser = Auth::user();
+        @endphp
+        <div class="card mb-4 border shadow-sm">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+                <h6 class="mb-0 font-weight-bold">
+                    <i class="bi bi-telegram text-primary mr-1"></i> Integrasi Telegram
+                </h6>
+                <div>
+                    @if($currentUser->hasTelegram())
+                        <span class="badge badge-success px-2 py-1"><i class="bi bi-check-circle-fill"></i> Terhubung</span>
+                    @elseif($currentUser->telegram_blocked_at)
+                        <span class="badge badge-danger px-2 py-1"><i class="bi bi-exclamation-triangle-fill"></i> Bot Diblokir</span>
+                    @else
+                        <span class="badge badge-secondary px-2 py-1"><i class="bi bi-dash-circle"></i> Belum Terhubung</span>
+                    @endif
+                </div>
+            </div>
+            <div class="card-body">
+                <p class="text-muted small mb-3">
+                    Dapatkan notifikasi instan untuk status laporan dan tiket garansi Anda. <em>(Opsional, bukan syarat membuat laporan)</em>.
+                </p>
+
+                @if($currentUser->hasTelegram())
+                    <div class="alert alert-light border d-flex justify-content-between align-items-center p-2 mb-3">
+                        <small class="text-success font-weight-bold">
+                            <i class="bi bi-person-check-fill mr-1"></i>
+                            {{ $currentUser->telegram_username ? '@' . $currentUser->telegram_username : 'ID ' . substr((string)$currentUser->telegram_chat_id, 0, 4) . '***' }}
+                        </small>
+                        <form method="POST" action="{{ route('telegram.unlink') }}" onsubmit="return confirm('Putuskan tautan Telegram Anda?')">
+                            @csrf
+                            <button type="submit" class="btn btn-outline-danger btn-xs py-1 px-2" style="font-size: 0.75rem;">
+                                Putuskan
+                            </button>
+                        </form>
+                    </div>
+                @else
+                    <div class="mb-3 text-center">
+                        <button type="button" class="btn btn-outline-primary btn-sm btn-block" onclick="generateLaporanTelegramLink()" id="btn-laporan-telegram">
+                            <i class="bi bi-link-45deg"></i> Hubungkan Telegram
+                        </button>
+                    </div>
+                    <div id="laporan-telegram-result" style="display: none;" class="alert alert-info py-2 px-3 small mb-3">
+                        <div><strong>Tautan Siap (15 Menit):</strong></div>
+                        <a href="#" id="laporan-telegram-open-btn" target="_blank" class="btn btn-primary btn-sm mt-1 mb-1">
+                            <i class="bi bi-telegram"></i> Buka Bot Telegram
+                        </a>
+                    </div>
+                @endif
+
+                <!-- Pilihan Saluran Notifikasi -->
+                <form method="POST" action="{{ route('telegram.channel_preference') }}">
+                    @csrf
+                    <label class="small font-weight-bold text-muted mb-1 d-block">Saluran Notifikasi Tiket:</label>
+                    <div class="input-group input-group-sm">
+                        <select name="notif_channel_laporan" class="custom-select custom-select-sm">
+                            <option value="auto" {{ $currentUser->notif_channel_laporan === 'auto' ? 'selected' : '' }}>Otomatis (Telegram / WhatsApp)</option>
+                            <option value="telegram" {{ $currentUser->notif_channel_laporan === 'telegram' ? 'selected' : '' }}>Telegram Saja</option>
+                            <option value="whatsapp" {{ $currentUser->notif_channel_laporan === 'whatsapp' ? 'selected' : '' }}>WhatsApp Saja</option>
+                        </select>
+                        <div class="input-group-append">
+                            <button class="btn btn-dark btn-sm" type="submit">Simpan</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <div class="card">
             <div class="card-header">
                 <h4>Buat Laporan Baru</h4>
@@ -117,6 +186,12 @@
                                 </td>
                                 <td>
                                     <button class="btn btn-sm btn-outline-info" onclick="viewDetailLaporan({{ json_encode($item) }})">Detail</button>
+                                    <a href="{{ route('laporan.show', $item->id) }}" class="btn btn-sm btn-info ml-1" title="Buka Thread Percakapan">
+                                        <i class="bi bi-chat-dots-fill"></i> Thread
+                                        @if($item->pesan && $item->pesan->count() > 0)
+                                            <span class="badge badge-light text-dark ml-1">{{ $item->pesan->count() }}</span>
+                                        @endif
+                                    </a>
                                 </td>
                             </tr>
                             @empty
@@ -196,6 +271,35 @@
         }
 
         $('#detailLaporanModal').modal('show');
+    }
+
+    function generateLaporanTelegramLink() {
+        const btn = document.getElementById('btn-laporan-telegram');
+        if (btn) btn.disabled = true;
+
+        fetch("{{ route('telegram.link_token') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                "Accept": "application/json"
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (btn) btn.disabled = false;
+            if (data.status === 'success') {
+                document.getElementById('laporan-telegram-open-btn').href = data.url;
+                document.getElementById('laporan-telegram-result').style.display = 'block';
+                window.open(data.url, '_blank');
+            } else {
+                alert(data.message || 'Gagal membuat tautan Telegram.');
+            }
+        })
+        .catch(() => {
+            if (btn) btn.disabled = false;
+            alert('Koneksi gagal. Coba kembali.');
+        });
     }
 </script>
 

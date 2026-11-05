@@ -89,6 +89,12 @@
                                 </td>
                                 <td>
                                     <button class="btn btn-sm btn-info" onclick="viewAdminDetailLaporan({{ json_encode($item) }}, '{{ $item->user->name ?? '-' }}', '{{ $item->user->email }}', '{{ $item->user->customer->first()?->nomor_telepon }}')">Detail</button>
+                                    <a href="{{ route('laporan.show', $item->id) }}" class="btn btn-sm btn-primary ml-1" title="Buka Thread Percakapan">
+                                        <i class="bi bi-chat-dots-fill"></i> Thread
+                                        @if($item->pesan && $item->pesan->count() > 0)
+                                            <span class="badge badge-light text-dark ml-1">{{ $item->pesan->count() }}</span>
+                                        @endif
+                                    </a>
                                 </td>
                             </tr>
                             @empty

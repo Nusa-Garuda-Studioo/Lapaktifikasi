@@ -52,3 +52,5 @@ Schedule::call(function () {
 Schedule::command('pakasir:expire-transactions')->everyFiveMinutes();
 Schedule::command('tripay:reconcile-transactions')->everyFiveMinutes();
 Schedule::command('seller:evaluate-badges')->daily();
+Schedule::command('seller:enforce-telegram')->daily();
+Schedule::command('laporan:check-sla')->everyFiveMinutes();

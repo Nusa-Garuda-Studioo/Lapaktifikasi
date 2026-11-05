@@ -378,6 +378,8 @@ class CustomerPremiumController extends ApiController
             'status' => 'pending'
         ]);
 
+        app(\App\Services\Telegram\NotificationRouter::class)->notifyTicketCreated($laporan);
+
         return $this->sendResponse($laporan, 'Laporan berhasil dibuat', 201);
     }
 }

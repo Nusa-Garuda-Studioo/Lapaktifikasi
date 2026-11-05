@@ -217,6 +217,18 @@ class DashboardController extends Controller
             ->orderBy('id', 'desc')
             ->get();
 
+        // 6. Tiket laporan kendala garansi pelanggan terkait toko ini
+        $tiket_kendala = \App\Models\Laporan::with(['user.customer', 'pesan'])
+            ->where(function ($q) use ($user_id, $toko_id) {
+                $q->where('assigned_to', $user_id)
+                  ->orWhereHas('user.customer.pembelian.varianLayanan.tipeLayanan.produk', function ($qp) use ($toko_id) {
+                      $qp->where('id_toko', $toko_id);
+                  });
+            })
+            ->latest()
+            ->take(6)
+            ->get();
+
         return view('seller.dashboard', compact(
             'toko',
             'total_order',
@@ -224,6 +236,7 @@ class DashboardController extends Controller
             'saldo_toko',
             'total_produk_terjual',
             'riwayat_mutasi',
+            'tiket_kendala',
             'range',
             'startDate',
             'endDate'

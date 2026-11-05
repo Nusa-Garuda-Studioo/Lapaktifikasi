@@ -40,4 +40,12 @@ return [
     'fonnte' => [
         'token' => env('FONNTE_TOKEN'),
     ],
+
+    'telegram' => [
+        'enabled' => env('TELEGRAM_ENABLED', false),
+        'bot_token' => env('TELEGRAM_BOT_TOKEN'),
+        'bot_username' => env('TELEGRAM_BOT_USERNAME'),
+        'webhook_secret' => env('TELEGRAM_WEBHOOK_SECRET'),
+        'admin_group_id' => env('TELEGRAM_ADMIN_GROUP_ID'),
+    ],
 ];
