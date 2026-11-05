@@ -219,7 +219,9 @@ class FlowHandler
 
         try {
             $fileInfo = $this->client->getFile($fileId);
-            $remotePath = $fileInfo['result']['file_path'] ?? null;
+            $remotePath = is_array($fileInfo)
+                ? ($fileInfo['result']['file_path'] ?? $fileInfo['file_path'] ?? null)
+                : null;
             if (!$remotePath) {
                 return null;
             }

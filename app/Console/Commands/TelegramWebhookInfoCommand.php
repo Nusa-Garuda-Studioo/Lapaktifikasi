@@ -39,8 +39,18 @@ class TelegramWebhookInfoCommand extends Command
                 return Command::SUCCESS;
             }
 
+            if ($info === true) {
+                $this->info('Webhook info retrieved successfully.');
+                return Command::SUCCESS;
+            }
+
+            if (!is_array($info)) {
+                $this->warn('Unexpected webhook info response format.');
+                return Command::SUCCESS;
+            }
+
             $rows = [
-                ['Webhook URL', $info['url'] ?: '(none)'],
+                ['Webhook URL', !empty($info['url']) ? $info['url'] : '(none)'],
                 ['Has Custom Certificate', !empty($info['has_custom_certificate']) ? 'Yes' : 'No'],
                 ['Pending Update Count', $info['pending_update_count'] ?? 0],
                 ['Max Connections', $info['max_connections'] ?? '(default)'],

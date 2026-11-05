@@ -43,7 +43,7 @@ class TelegramClient
         return htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     }
 
-    public function sendMessage(int|string $chatId, string $text, array $options = []): ?array
+    public function sendMessage(int|string $chatId, string $text, array $options = []): array|bool|null
     {
         if (!$this->isEnabled()) {
             return null;
@@ -58,7 +58,7 @@ class TelegramClient
         return $this->request('sendMessage', $params);
     }
 
-    public function editMessageText(int|string $chatId, int $messageId, string $text, array $options = []): ?array
+    public function editMessageText(int|string $chatId, int $messageId, string $text, array $options = []): array|bool|null
     {
         if (!$this->isEnabled()) {
             return null;
@@ -74,7 +74,7 @@ class TelegramClient
         return $this->request('editMessageText', $params);
     }
 
-    public function answerCallbackQuery(string $callbackQueryId, array $options = []): ?array
+    public function answerCallbackQuery(string $callbackQueryId, array $options = []): array|bool|null
     {
         if (!$this->isEnabled()) {
             return null;
@@ -87,7 +87,7 @@ class TelegramClient
         return $this->request('answerCallbackQuery', $params);
     }
 
-    public function sendPhoto(int|string $chatId, mixed $photo, array $options = []): ?array
+    public function sendPhoto(int|string $chatId, mixed $photo, array $options = []): array|bool|null
     {
         if (!$this->isEnabled()) {
             return null;
@@ -134,7 +134,7 @@ class TelegramClient
         return $this->request('sendPhoto', $params);
     }
 
-    public function getFile(string $fileId): ?array
+    public function getFile(string $fileId): array|bool|null
     {
         if (!$this->isEnabled()) {
             return null;
@@ -173,7 +173,7 @@ class TelegramClient
         return false;
     }
 
-    public function createForumTopic(int|string $chatId, string $name, array $options = []): ?array
+    public function createForumTopic(int|string $chatId, string $name, array $options = []): array|bool|null
     {
         if (!$this->isEnabled()) {
             return null;
@@ -187,7 +187,7 @@ class TelegramClient
         return $this->request('createForumTopic', $params);
     }
 
-    public function setWebhook(string $url, ?string $secretToken = null, array $allowedUpdates = []): ?array
+    public function setWebhook(string $url, ?string $secretToken = null, array $allowedUpdates = []): array|bool|null
     {
         if (!$this->isEnabled()) {
             return null;
@@ -206,7 +206,18 @@ class TelegramClient
         return $this->request('setWebhook', $params);
     }
 
-    public function getWebhookInfo(): ?array
+    public function deleteWebhook(bool $dropPendingUpdates = false): array|bool|null
+    {
+        if (!$this->isEnabled()) {
+            return null;
+        }
+
+        return $this->request('deleteWebhook', [
+            'drop_pending_updates' => $dropPendingUpdates,
+        ]);
+    }
+
+    public function getWebhookInfo(): array|bool|null
     {
         if (!$this->isEnabled()) {
             return null;
@@ -215,7 +226,7 @@ class TelegramClient
         return $this->request('getWebhookInfo');
     }
 
-    protected function request(string $method, array $params = []): ?array
+    protected function request(string $method, array $params = []): array|bool|null
     {
         $uri = "/bot{$this->botToken}/{$method}";
 
@@ -237,7 +248,7 @@ class TelegramClient
         return null;
     }
 
-    protected function requestMultipart(string $method, array $multipart): ?array
+    protected function requestMultipart(string $method, array $multipart): array|bool|null
     {
         $uri = "/bot{$this->botToken}/{$method}";
 
@@ -259,7 +270,7 @@ class TelegramClient
         return null;
     }
 
-    protected function parseResponse($response): ?array
+    protected function parseResponse($response): array|bool|null
     {
         $contents = (string) $response->getBody();
         $data = json_decode($contents, true);
@@ -269,7 +280,11 @@ class TelegramClient
             throw new TelegramException($this->sanitize($desc));
         }
 
-        return $data['result'] ?? $data;
+        if (array_key_exists('result', $data)) {
+            return $data['result'];
+        }
+
+        return $data;
     }
 
     protected function handleHttpException(ClientException|ServerException $e): void

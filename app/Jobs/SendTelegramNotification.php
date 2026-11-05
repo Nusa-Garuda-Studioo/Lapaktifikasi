@@ -59,7 +59,7 @@ class SendTelegramNotification implements ShouldQueue
 
             $response = $client->sendMessage($this->chatId, $this->text, $options);
 
-            $messageId = $response['result']['message_id'] ?? null;
+            $messageId = is_array($response) ? ($response['result']['message_id'] ?? $response['message_id'] ?? null) : null;
 
             // Simpan mapping jika ada laporanId dan messageId
             if ($messageId && $this->laporanId) {

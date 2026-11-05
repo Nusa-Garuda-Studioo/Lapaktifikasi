@@ -268,7 +268,9 @@ class LaporanService
             try {
                 $topicName = Str::limit("{$ticketNum} - {$tokoNama}", 120);
                 $topicRes = $this->telegramClient->createForumTopic($adminGroupId, $topicName);
-                $topicId = $topicRes['result']['message_thread_id'] ?? null;
+                $topicId = is_array($topicRes)
+                    ? ($topicRes['result']['message_thread_id'] ?? $topicRes['message_thread_id'] ?? null)
+                    : null;
 
                 if ($topicId) {
                     $laporan->telegram_topic_id = (int) $topicId;

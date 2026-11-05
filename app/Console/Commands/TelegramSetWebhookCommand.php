@@ -42,8 +42,22 @@ class TelegramSetWebhookCommand extends Command
         try {
             $result = $client->setWebhook($webhookUrl, $secretToken, $allowedUpdates);
 
+            if (is_array($result) && isset($result['ok']) && !$result['ok']) {
+                $desc = $result['description'] ?? 'Telegram API returned ok=false';
+                $this->error('Failed to set webhook: ' . $client->sanitize($desc));
+                return Command::FAILURE;
+            }
+
+            if ($result === false) {
+                $this->error('Failed to set webhook: Telegram API returned false');
+                return Command::FAILURE;
+            }
+
             if ($result) {
                 $this->info('Telegram webhook successfully registered!');
+                if (is_array($result) && !empty($result['description'])) {
+                    $this->line($result['description']);
+                }
                 return Command::SUCCESS;
             }
 

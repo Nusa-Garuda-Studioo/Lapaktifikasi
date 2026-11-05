@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Services\Telegram\Exceptions\TelegramException;
 use App\Services\Telegram\TelegramClient;
 use Mockery;
 use Tests\TestCase;
@@ -33,6 +34,88 @@ class TelegramCommandsTest extends TestCase
         ])
             ->expectsOutputToContain('Registering Telegram webhook: https://mytestdomain.com/api/telegram/webhook')
             ->expectsOutputToContain('Telegram webhook successfully registered!')
+            ->assertSuccessful();
+    }
+
+    public function test_telegram_set_webhook_command_succeeds_with_boolean_true_result(): void
+    {
+        $mockClient = Mockery::mock(TelegramClient::class);
+        $mockClient->shouldReceive('setWebhook')
+            ->once()
+            ->andReturn(true);
+
+        $this->app->instance(TelegramClient::class, $mockClient);
+
+        $this->artisan('telegram:set-webhook')
+            ->expectsOutputToContain('Telegram webhook successfully registered!')
+            ->assertSuccessful();
+    }
+
+    public function test_telegram_set_webhook_command_succeeds_with_array_result_and_description(): void
+    {
+        $mockClient = Mockery::mock(TelegramClient::class);
+        $mockClient->shouldReceive('setWebhook')
+            ->once()
+            ->andReturn([
+                'ok' => true,
+                'result' => true,
+                'description' => 'Webhook was set',
+            ]);
+
+        $this->app->instance(TelegramClient::class, $mockClient);
+
+        $this->artisan('telegram:set-webhook')
+            ->expectsOutputToContain('Telegram webhook successfully registered!')
+            ->expectsOutputToContain('Webhook was set')
+            ->assertSuccessful();
+    }
+
+    public function test_telegram_set_webhook_command_prints_description_and_fails_when_ok_is_false(): void
+    {
+        $mockClient = Mockery::mock(TelegramClient::class);
+        $mockClient->shouldReceive('sanitize')
+            ->andReturnUsing(fn($text) => $text);
+        $mockClient->shouldReceive('setWebhook')
+            ->once()
+            ->andReturn([
+                'ok' => false,
+                'description' => 'Bad Request: bad webhook: IP is reserved',
+            ]);
+
+        $this->app->instance(TelegramClient::class, $mockClient);
+
+        $this->artisan('telegram:set-webhook')
+            ->expectsOutputToContain('Failed to set webhook: Bad Request: bad webhook: IP is reserved')
+            ->assertFailed();
+    }
+
+    public function test_telegram_set_webhook_command_prints_description_and_fails_on_exception(): void
+    {
+        $mockClient = Mockery::mock(TelegramClient::class);
+        $mockClient->shouldReceive('sanitize')
+            ->andReturnUsing(fn($text) => $text);
+        $mockClient->shouldReceive('setWebhook')
+            ->once()
+            ->andThrow(new TelegramException('Bad Request: HTTPS url must be provided'));
+
+        $this->app->instance(TelegramClient::class, $mockClient);
+
+        $this->artisan('telegram:set-webhook')
+            ->expectsOutputToContain('Failed to set webhook: Bad Request: HTTPS url must be provided')
+            ->assertFailed();
+    }
+
+    public function test_telegram_webhook_info_command_handles_boolean_true(): void
+    {
+        $mockClient = Mockery::mock(TelegramClient::class);
+        $mockClient->shouldReceive('getWebhookInfo')
+            ->once()
+            ->andReturn(true);
+
+        $this->app->instance(TelegramClient::class, $mockClient);
+
+        $this->artisan('telegram:webhook-info')
+            ->expectsOutputToContain('Webhook info retrieved successfully.')
             ->assertSuccessful();
     }
 

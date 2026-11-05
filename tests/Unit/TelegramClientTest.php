@@ -32,6 +32,7 @@ class TelegramClientTest extends TestCase
         $this->assertSame('', $client->downloadFile('path/file.jpg'));
         $this->assertNull($client->createForumTopic(12345, 'Topic'));
         $this->assertNull($client->setWebhook('https://example.com'));
+        $this->assertNull($client->deleteWebhook());
         $this->assertNull($client->getWebhookInfo());
 
         // Assert no HTTP requests were made to Guzzle
@@ -115,6 +116,105 @@ class TelegramClientTest extends TestCase
         $escaped = TelegramClient::escape($input);
 
         $this->assertSame('Toko &lt;Lapaktifikasi&gt; &amp; &quot;Produk&quot; &#039;Digital&#039;', $escaped);
+    }
+
+    public function test_telegram_client_parses_boolean_true_result(): void
+    {
+        $mock = new MockHandler([
+            new Response(200, [], json_encode([
+                'ok' => true,
+                'result' => true,
+                'description' => 'Webhook was set',
+            ])),
+            new Response(200, [], json_encode([
+                'ok' => true,
+                'result' => true,
+            ])),
+            new Response(200, [], json_encode([
+                'ok' => true,
+                'result' => true,
+            ])),
+            new Response(200, [], json_encode([
+                'ok' => true,
+                'result' => true,
+            ])),
+        ]);
+
+        $handlerStack = HandlerStack::create($mock);
+        $guzzle = new Client(['handler' => $handlerStack]);
+        $client = new TelegramClient($guzzle, 'test_token', true);
+
+        // 1. setWebhook returns boolean true
+        $resSetWebhook = $client->setWebhook('https://example.com/api/telegram/webhook');
+        $this->assertTrue($resSetWebhook);
+
+        // 2. deleteWebhook returns boolean true
+        $resDeleteWebhook = $client->deleteWebhook();
+        $this->assertTrue($resDeleteWebhook);
+
+        // 3. answerCallbackQuery returns boolean true
+        $resAnswer = $client->answerCallbackQuery('cb_query_123');
+        $this->assertTrue($resAnswer);
+
+        // 4. editMessageText returns boolean true
+        $resEdit = $client->editMessageText(12345, 678, 'Updated text');
+        $this->assertTrue($resEdit);
+    }
+
+    public function test_telegram_client_parses_array_result(): void
+    {
+        $mock = new MockHandler([
+            new Response(200, [], json_encode([
+                'ok' => true,
+                'result' => [
+                    'message_id' => 999,
+                    'text' => 'Hello World',
+                    'chat' => ['id' => 12345],
+                ],
+            ])),
+            new Response(200, [], json_encode([
+                'ok' => true,
+                'result' => [
+                    'url' => 'https://example.com/webhook',
+                    'pending_update_count' => 0,
+                ],
+            ])),
+        ]);
+
+        $handlerStack = HandlerStack::create($mock);
+        $guzzle = new Client(['handler' => $handlerStack]);
+        $client = new TelegramClient($guzzle, 'test_token', true);
+
+        // 1. sendMessage returns array
+        $resMessage = $client->sendMessage(12345, 'Hello World');
+        $this->assertIsArray($resMessage);
+        $this->assertSame(999, $resMessage['message_id']);
+        $this->assertSame('Hello World', $resMessage['text']);
+
+        // 2. getWebhookInfo returns array
+        $resWebhookInfo = $client->getWebhookInfo();
+        $this->assertIsArray($resWebhookInfo);
+        $this->assertSame('https://example.com/webhook', $resWebhookInfo['url']);
+    }
+
+    public function test_telegram_client_throws_exception_when_ok_is_false(): void
+    {
+        $mock = new MockHandler([
+            new Response(200, [], json_encode([
+                'ok' => false,
+                'error_code' => 400,
+                'description' => 'Bad Request: bad webhook: IP is reserved',
+            ])),
+        ]);
+
+        $handlerStack = HandlerStack::create($mock);
+        $guzzle = new Client(['handler' => $handlerStack]);
+        $client = new TelegramClient($guzzle, 'test_token', true);
+
+        $this->expectException(TelegramException::class);
+        $this->expectExceptionMessage('Bad Request: bad webhook: IP is reserved');
+
+        $client->setWebhook('https://127.0.0.1/webhook');
     }
 }
 
