@@ -82,14 +82,20 @@
                     
                     <div class="form-group">
                         <label for="nama_toko">Nama Toko</label>
-                        <input type="text" class="form-control" id="nama_toko" name="nama_toko" value="{{ old('nama_toko', $toko->nama_toko) }}" required>
+                        <input type="text" class="form-control @error('nama_toko') is-invalid @enderror" id="nama_toko" name="nama_toko" value="{{ old('nama_toko', $toko->nama_toko) }}" required>
+                        @error('nama_toko')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="no_telp">No. Telepon / WhatsApp Kontak</label>
-                                <input type="text" class="form-control" id="no_telp" name="no_telp" value="{{ old('no_telp', $toko->no_telp) }}" required>
+                                <input type="text" class="form-control @error('no_telp') is-invalid @enderror" id="no_telp" name="no_telp" value="{{ old('no_telp', $toko->no_telp) }}" required>
+                                @error('no_telp')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -99,7 +105,10 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">@</span>
                                     </div>
-                                    <input type="text" class="form-control" id="akun_telegram" name="akun_telegram" value="{{ old('akun_telegram', $toko->akun_telegram) }}" placeholder="username" required>
+                                    <input type="text" class="form-control @error('akun_telegram') is-invalid @enderror" id="akun_telegram" name="akun_telegram" value="{{ old('akun_telegram', $toko->akun_telegram) }}" placeholder="username" required>
+                                    @error('akun_telegram')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                                 <small class="form-text text-muted">
                                     Kontak telegram yang akan ditampilkan ke pembeli.

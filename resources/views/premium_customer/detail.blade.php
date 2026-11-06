@@ -317,12 +317,8 @@
                         <button type="button" class="shopee-qty-btn" id="btn-qty-plus" onclick="updateQty(1)">+</button>
                     </div>
 
-                    <!-- 8. Dua Tombol Aksi (Desktop Layout) -->
+                    <!-- 8. Tombol Aksi Utama (Desktop Layout) -->
                     <div class="shopee-action-row">
-                        <button type="button" class="shopee-btn-cart" id="btn-cart-desktop" onclick="addToCartMock()">
-                            <i class="bi bi-cart-plus-fill" style="font-size: 1.15rem;"></i> Masukkan Keranjang
-                        </button>
-
                         <button type="submit" class="shopee-btn-buy" id="btn-buy-desktop">
                             <i class="bi bi-bag-check-fill" style="font-size: 1.15rem;"></i> Beli Sekarang
                         </button>
@@ -431,9 +427,6 @@
 
 <!-- STICKY BOTTOM ACTION BAR UNTUK TABLET & MOBILE -->
 <div class="shopee-mobile-sticky-bar">
-    <button type="button" class="btn-mobile-cart" id="btn-cart-mobile" onclick="addToCartMock()">
-        <i class="bi bi-cart-plus-fill"></i> Keranjang
-    </button>
     <button type="button" class="btn-mobile-buy" id="btn-buy-mobile" onclick="triggerMobileBuy()">
         <i class="bi bi-bag-check-fill"></i> Beli Sekarang
     </button>

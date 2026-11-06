@@ -250,10 +250,10 @@
                                 ? asset($websiteSettings->visi_logo_path)
                                 : asset('assets/img/visi_kami.svg');
                         @endphp
-                        <div style="width: 170px; height: 170px; display: flex; align-items: center; justify-content: center;">
+                        <div class="vm-logo-wrap" style="width: 170px; height: 170px; display: flex; align-items: center; justify-content: center;">
                             <img src="{{ $visiLogo }}" alt="Visi Kami" style="max-width: 160px; max-height: 160px; object-fit: contain; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.05));">
                         </div>
-                        <h3 style="font-family: 'Space Grotesk', sans-serif; font-size: 1.65rem; font-weight: 800; color: #000000; margin-top: 14px;">Visi Kami</h3>
+                        <h3 class="vm-default-title" style="font-family: 'Space Grotesk', sans-serif; font-size: 1.65rem; font-weight: 800; color: #000000; margin-top: 14px;">Visi Kami</h3>
                     </div>
 
                     <!-- Hovered State: Full Text Content -->
@@ -278,10 +278,10 @@
                                 ? asset($websiteSettings->misi_logo_path)
                                 : asset('assets/img/misi_utama.svg');
                         @endphp
-                        <div style="width: 170px; height: 170px; display: flex; align-items: center; justify-content: center;">
+                        <div class="vm-logo-wrap" style="width: 170px; height: 170px; display: flex; align-items: center; justify-content: center;">
                             <img src="{{ $misiLogo }}" alt="Misi Utama" style="max-width: 150px; max-height: 175px; object-fit: contain; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.05));">
                         </div>
-                        <h3 style="font-family: 'Space Grotesk', sans-serif; font-size: 1.65rem; font-weight: 800; color: #000000; margin-top: 14px;">Misi Utama</h3>
+                        <h3 class="vm-default-title" style="font-family: 'Space Grotesk', sans-serif; font-size: 1.65rem; font-weight: 800; color: #000000; margin-top: 14px;">Misi Utama</h3>
                     </div>
 
                     <!-- Hovered State: Full Bulleted Points Content (Matching Screenshot 1) -->

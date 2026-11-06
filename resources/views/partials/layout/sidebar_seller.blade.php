@@ -19,9 +19,9 @@
         </div>
 
         <div class="flex flex-col gap-y-7">
-            <!-- GENERAL SECTION -->
+            <!-- 1. GRUP UTAMA -->
             <div class="flex flex-col gap-y-3">
-                <h6 class="sidebar-section-title">GENERAL</h6>
+                <h6 class="sidebar-section-title">UTAMA</h6>
                 <ul class="sidebar-menu-list">
                     <li class="sidebar-menu-item {{ Request::path() == 'seller/dashboard' ? 'active' : '' }}">
                         <a href="{{ url('/seller/dashboard') }}">
@@ -32,9 +32,52 @@
                 </ul>
             </div>
 
-            <!-- TOKO & SELLER SECTION -->
+            <!-- 2. GRUP PRODUK & STOK -->
             <div class="flex flex-col gap-y-3">
-                <h6 class="sidebar-section-title">SELLER MENU</h6>
+                <h6 class="sidebar-section-title">PRODUK & STOK</h6>
+                <ul class="sidebar-menu-list">
+                    <li class="sidebar-menu-item @if(Request::path() == 'menu_produk' || Request::segment(1) == 'menu_produk') active @endif">
+                        <a href="{{ url('/menu_produk') }}">
+                            <i class="bi bi-bag-check text-lg"></i>
+                            Menu Produk Premium
+                        </a>
+                    </li>
+                    <li class="sidebar-menu-item @if(Request::segment(1) == 'premium' && Request::segment(2) == 'inventaris') active @endif">
+                        <a href="{{ route('premium.inventaris.index') }}">
+                            <i class="bi bi-box-seam text-lg"></i>
+                            Inventaris Premium
+                        </a>
+                    </li>
+                    <li class="sidebar-menu-item @if(Request::segment(2) == 'histori') active @endif">
+                        <a href="{{ route('premium.histori.index') }}">
+                            <i class="bi bi-journal-text text-lg"></i>
+                            Histori Premium
+                        </a>
+                    </li>
+                    <li class="sidebar-menu-item @if(Request::path() == 'menu_produk_digital' || Request::segment(1) == 'menu_produk_digital') active @endif">
+                        <a href="{{ url('/menu_produk_digital') }}">
+                            <i class="bi bi-file-earmark-code text-lg"></i>
+                            Menu Produk Digital
+                        </a>
+                    </li>
+                    <li class="sidebar-menu-item @if(Request::segment(1) == 'digital' && Request::segment(2) == 'inventaris') active @endif">
+                        <a href="{{ route('digital.inventaris.index') }}">
+                            <i class="bi bi-cloud-arrow-down text-lg"></i>
+                            Inventaris Digital
+                        </a>
+                    </li>
+                    <li class="sidebar-menu-item @if(Request::path() == 'produk_terjual') active @endif">
+                        <a href="{{ url('produk_terjual') }}">
+                            <i class="bi bi-cart-dash text-lg"></i>
+                            Produk Terjual
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 3. GRUP TOKO & PENGATURAN -->
+            <div class="flex flex-col gap-y-3">
+                <h6 class="sidebar-section-title">TOKO & PENGATURAN</h6>
                 <ul class="sidebar-menu-list">
                     <li class="sidebar-menu-item @if(Request::path() == 'seller/profil') active @endif">
                         <a href="{{ url('seller/profil') }}">
@@ -69,63 +112,6 @@
                             Voucher Toko
                         </a>
                     </li>
-                </ul>
-            </div>
-
-            <!-- PRODUK SECTION -->
-            <div class="flex flex-col gap-y-3">
-                <h6 class="sidebar-section-title">PRODUK SELLER</h6>
-                <ul class="sidebar-menu-list">
-                    <li class="sidebar-menu-item @if(Request::path() == 'menu_produk' || Request::segment(1) == 'menu_produk') active @endif">
-                        <a href="{{ url('/menu_produk') }}">
-                            <i class="bi bi-bag-check text-lg"></i>
-                            Menu Produk Premium
-                        </a>
-                    </li>
-                    <li class="sidebar-menu-item @if(Request::path() == 'menu_produk_digital' || Request::segment(1) == 'menu_produk_digital') active @endif">
-                        <a href="{{ url('/menu_produk_digital') }}">
-                            <i class="bi bi-file-earmark-code text-lg"></i>
-                            Menu Produk Digital
-                        </a>
-                    </li>
-                    <li class="sidebar-menu-item @if(Request::path() == 'produk_terjual') active @endif">
-                        <a href="{{ url('produk_terjual') }}">
-                            <i class="bi bi-cart-dash text-lg"></i>
-                            Produk Terjual
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- INVENTARIS SECTION -->
-            <div class="flex flex-col gap-y-3">
-                <h6 class="sidebar-section-title">INVENTARIS</h6>
-                <ul class="sidebar-menu-list">
-                    <li class="sidebar-menu-item @if(Request::segment(1) == 'premium' && Request::segment(2) == 'inventaris') active @endif">
-                        <a href="{{ route('premium.inventaris.index') }}">
-                            <i class="bi bi-box-seam text-lg"></i>
-                            Inventaris Premium
-                        </a>
-                    </li>
-                    <li class="sidebar-menu-item @if(Request::segment(2) == 'histori') active @endif">
-                        <a href="{{ route('premium.histori.index') }}">
-                            <i class="bi bi-journal-text text-lg"></i>
-                            Histori Premium
-                        </a>
-                    </li>
-                    <li class="sidebar-menu-item @if(Request::segment(1) == 'digital' && Request::segment(2) == 'inventaris') active @endif">
-                        <a href="{{ route('digital.inventaris.index') }}">
-                            <i class="bi bi-cloud-arrow-down text-lg"></i>
-                            Inventaris Digital
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- PENGATURAN SECTION -->
-            <div class="flex flex-col gap-y-3">
-                <h6 class="sidebar-section-title">PENGATURAN</h6>
-                <ul class="sidebar-menu-list">
                     <li class="sidebar-menu-item @if(Request::path() == 'ganti_password') active @endif">
                         <a href="{{ url('ganti_password') }}">
                             <i class="bi bi-key text-lg"></i>

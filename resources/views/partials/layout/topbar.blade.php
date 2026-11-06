@@ -1,5 +1,11 @@
 <div class="w-full dash-navbar bg-white py-3 px-4 sm:px-7 border-b border-gray-100 shadow-sm">
-    <div class="flex flex-row justify-between items-center gap-3">
+    <div class="flex flex-row justify-between items-center gap-2 sm:gap-3">
+        <!-- Hamburger Menu Toggle Button (< lg) -->
+        <button type="button" id="topbar-hamburger-toggle" aria-label="Buka Menu Navigasi"
+            class="lg:hidden flex items-center justify-center p-2 rounded-xl bg-gray-100 hover:bg-violet-50 text-indigo-950 hover:text-violet-700 transition-colors border border-gray-200 focus:outline-none flex-shrink-0">
+            <i class="bi bi-list text-2xl leading-none"></i>
+        </button>
+
         <!-- Search bar (Collapsible/Flexible on mobile) -->
         <div class="relative flex-1 max-w-[450px]">
             <form action="{{ route('premium.katalog') }}" method="GET">
@@ -78,3 +84,74 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+    // Vanilla JS handler for Mobile Drawer Navigation (F2.1)
+    (function() {
+        function setupMobileDrawer() {
+            var toggleBtns = document.querySelectorAll('#topbar-hamburger-toggle, #mobile-menu-toggle');
+            var overlay = document.getElementById('mobile-drawer-overlay');
+            var drawer = document.getElementById('mobile-drawer');
+            var closeBtn = document.getElementById('mobile-drawer-close');
+
+            if (!drawer || !overlay) return;
+
+            function openDrawer(e) {
+                if (e) e.preventDefault();
+                overlay.classList.remove('hidden');
+                requestAnimationFrame(function() {
+                    overlay.classList.add('opacity-100');
+                    overlay.classList.remove('opacity-0');
+                    drawer.classList.remove('-translate-x-full');
+                    document.body.classList.add('overflow-hidden');
+                });
+            }
+
+            function closeDrawer(e) {
+                if (e && e.preventDefault) e.preventDefault();
+                drawer.classList.add('-translate-x-full');
+                overlay.classList.add('opacity-0');
+                overlay.classList.remove('opacity-100');
+                setTimeout(function() {
+                    overlay.classList.add('hidden');
+                    document.body.classList.remove('overflow-hidden');
+                }, 300);
+            }
+
+            toggleBtns.forEach(function(btn) {
+                btn.addEventListener('click', openDrawer);
+            });
+
+            if (closeBtn) {
+                closeBtn.addEventListener('click', closeDrawer);
+            }
+
+            if (overlay) {
+                overlay.addEventListener('click', closeDrawer);
+            }
+
+            // Menutup drawer ketika link menu sidebar diklik
+            var menuLinks = drawer.querySelectorAll('.sidebar-menu-item a');
+            menuLinks.forEach(function(link) {
+                link.addEventListener('click', function() {
+                    closeDrawer();
+                });
+            });
+
+            // Menutup drawer dengan tombol Escape (ESC)
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && !drawer.classList.contains('-translate-x-full')) {
+                    closeDrawer();
+                }
+            });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', setupMobileDrawer);
+        } else {
+            setupMobileDrawer();
+        }
+    })();
+</script>
+@endpush

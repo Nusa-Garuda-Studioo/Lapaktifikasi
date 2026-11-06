@@ -193,11 +193,16 @@
                                 <div class="mono-form-group">
                                     <label class="mono-form-label">Nama Lengkap</label>
                                     <div class="mono-input-wrapper">
-                                        <input type="text" class="mono-input" name="name" autocomplete="off"
-                                            placeholder="Nama Lengkap Anda" value="{{ (Auth::user()->name == '' ? '' : $user->name) }}">
+                                        <input type="text" class="mono-input @error('name') is-invalid @enderror" name="name" autocomplete="off"
+                                            placeholder="Nama Lengkap Anda" value="{{ old('name', (Auth::user()->name == '' ? '' : $user->name)) }}">
                                         <i class="bi bi-person-fill mono-input-icon"></i>
                                     </div>
-                                    @if($user->name == '')
+                                    @error('name')
+                                        <div class="text-danger small mt-1">
+                                            <i class="bi bi-exclamation-circle-fill mr-1"></i> {{ $message }}
+                                        </div>
+                                    @enderror
+                                    @if($user->name == '' && !$errors->has('name'))
                                         <div class="mono-warning">
                                             <i class="bi bi-exclamation-circle-fill"></i>
                                             <span>Isi nama lengkap Anda (Wajib).</span>
@@ -219,12 +224,17 @@
                                 <div class="mono-form-group">
                                     <label class="mono-form-label">Nomor Telepon</label>
                                     <div class="mono-input-wrapper">
-                                        <input type="text" class="mono-input" placeholder="Nomor Telepon Anda" name="nomor_telepon"
+                                        <input type="text" class="mono-input @error('nomor_telepon') is-invalid @enderror" placeholder="Nomor Telepon Anda" name="nomor_telepon"
                                             autocomplete="off"
-                                            value="{{ ($item->nomor_telepon == '' ? '' : $item->nomor_telepon) }}">
+                                            value="{{ old('nomor_telepon', ($item->nomor_telepon == '' ? '' : $item->nomor_telepon)) }}">
                                         <i class="bi bi-telephone-fill mono-input-icon"></i>
                                     </div>
-                                    @if($item->nomor_telepon == '')
+                                    @error('nomor_telepon')
+                                        <div class="text-danger small mt-1">
+                                            <i class="bi bi-exclamation-circle-fill mr-1"></i> {{ $message }}
+                                        </div>
+                                    @enderror
+                                    @if($item->nomor_telepon == '' && !$errors->has('nomor_telepon'))
                                         <div class="mono-warning">
                                             <i class="bi bi-exclamation-circle-fill"></i>
                                             <span>Isi nomor telepon agar admin bisa menghubungi Anda dengan mudah jika terjadi kendala pembayaran (Wajib).</span>

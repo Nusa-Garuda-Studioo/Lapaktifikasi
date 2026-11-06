@@ -12,12 +12,6 @@
     margin: 0 auto;
 }
 
-@media (max-width: 768px) {
-    .vm-grid-container {
-        grid-template-columns: 1fr;
-    }
-}
-
 .vm-card-interactive {
     background: #ffffff;
     border-radius: 28px;
@@ -67,28 +61,95 @@
     overflow-y: auto;
 }
 
-.vm-card-interactive:hover {
-    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.08);
-    border-color: #000000;
+/* Desktop Hover States (Only on screens with hover capability >= 992px) */
+@media (hover: hover) and (min-width: 992px) {
+    .vm-card-interactive:hover {
+        box-shadow: 0 20px 45px rgba(0, 0, 0, 0.08);
+        border-color: #000000;
+    }
+
+    .vm-card-interactive:hover .vm-default-view {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    .vm-card-interactive:hover .vm-hover-view {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0);
+    }
+
+    /* Sibling Card Blur Effect on Hover */
+    .vm-grid-container:has(.vm-card-interactive:hover) .vm-card-interactive:not(:hover),
+    .vm-card-interactive.blur-effect {
+        filter: blur(6px);
+        opacity: 0.45;
+        transform: scale(0.97);
+    }
 }
 
-.vm-card-interactive:hover .vm-default-view {
-    opacity: 0;
-    transform: scale(0.9);
-}
+/* Mobile & Touch Devices (< 992px or non-hover): Content is ALWAYS readable by default */
+@media (max-width: 991.98px), (hover: none) {
+    .vm-grid-container {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
 
-.vm-card-interactive:hover .vm-hover-view {
-    opacity: 1;
-    pointer-events: auto;
-    transform: translateY(0);
-}
+    .vm-card-interactive {
+        min-height: auto;
+        cursor: default;
+        overflow: visible;
+        border-color: rgba(0, 0, 0, 0.1);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+    }
 
-/* Sibling Card Blur Effect on Hover */
-.vm-grid-container:has(.vm-card-interactive:hover) .vm-card-interactive:not(:hover),
-.vm-card-interactive.blur-effect {
-    filter: blur(6px);
-    opacity: 0.45;
-    transform: scale(0.97);
+    .vm-card-interactive .vm-default-view {
+        padding: 28px 24px 0 24px;
+        height: auto;
+        gap: 0;
+        opacity: 1;
+        transform: none;
+    }
+
+    .vm-card-interactive .vm-logo-wrap,
+    .vm-card-interactive .vm-default-view div[style*="width: 170px"] {
+        width: 80px !important;
+        height: 80px !important;
+    }
+
+    .vm-card-interactive .vm-default-view img {
+        max-width: 72px !important;
+        max-height: 72px !important;
+    }
+
+    .vm-card-interactive .vm-default-title,
+    .vm-card-interactive .vm-default-view h3 {
+        display: none !important;
+    }
+
+    .vm-card-interactive .vm-hover-view {
+        position: relative;
+        inset: auto;
+        opacity: 1;
+        pointer-events: auto;
+        transform: none;
+        padding: 16px 24px 28px 24px;
+        overflow-y: visible;
+        background: transparent;
+    }
+
+    .vm-card-interactive:hover .vm-default-view,
+    .vm-card-interactive:hover .vm-hover-view {
+        opacity: 1;
+        transform: none;
+    }
+
+    .vm-grid-container:has(.vm-card-interactive:hover) .vm-card-interactive:not(:hover),
+    .vm-card-interactive.blur-effect {
+        filter: none;
+        opacity: 1;
+        transform: none;
+    }
 }
 
 /* HERO SECTION */
