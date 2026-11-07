@@ -264,6 +264,10 @@
     margin: 0 auto;
 }
 
+.hero-img-wrapper picture {
+    display: contents;
+}
+
 .hero-img-glow {
     position: absolute;
     top: 50%;

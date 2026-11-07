@@ -72,14 +72,16 @@ class AppServiceProvider extends ServiceProvider
         // Rate Limiters
         $this->configureRateLimiting();
 
-        // Global Site Settings
+        // Global Site Settings (Cached via Redis / Cache Store to eliminate per-request DB queries)
         try {
-            if (!app()->runningInConsole() && Schema::hasTable('setting_websites')) {
-                $websiteSettings = SettingWebsite::first();
-                View::share('websiteSettings', $websiteSettings);
+            if (!app()->runningInConsole()) {
+                $websiteSettings = SettingWebsite::getCached();
+                if ($websiteSettings) {
+                    View::share('websiteSettings', $websiteSettings);
+                }
             }
         } catch (\Throwable $e) {
-            // Safe fallback during testing or console commands
+            // Safe fallback during migration, testing or console commands
         }
     }
 

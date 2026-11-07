@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Toko;
 use App\Models\SettingKomisi;
+use Illuminate\Support\Facades\Cache;
 
 class KomisiService
 {
@@ -20,7 +21,10 @@ class KomisiService
             return (float) $toko->komisi_override;
         }
 
-        $defaultSetting = SettingKomisi::first();
+        $defaultSetting = Cache::remember('setting_komisi_global', 3600, function () {
+            return SettingKomisi::first();
+        });
+
         return $defaultSetting ? (float) $defaultSetting->komisi_default : 10.00;
     }
 }

@@ -417,25 +417,36 @@
 
 <script>
     (function () {
-        // --- 1. Service Worker Silent Registration ---
+        // Helper defer run until browser is genuinely idle
+        function runWhenIdle(callback) {
+            if ('requestIdleCallback' in window) {
+                window.requestIdleCallback(callback, { timeout: 3000 });
+            } else {
+                setTimeout(callback, 1500);
+            }
+        }
+
+        // --- 1. Service Worker Silent Registration (Deferred till load + idle) ---
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function () {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(function () {
-                        // Auto-sync jika permission sudah granted sebelumnya
-                        if ('Notification' in window && Notification.permission === 'granted') {
-                            navigator.serviceWorker.ready.then(function (reg) {
-                                reg.pushManager.getSubscription().then(function (sub) {
-                                    if (!sub) {
-                                        window.LapaktifikasiPWA.requestPush(true);
-                                    }
+                runWhenIdle(function () {
+                    navigator.serviceWorker.register('/sw.js')
+                        .then(function () {
+                            // Auto-sync jika permission sudah granted sebelumnya
+                            if ('Notification' in window && Notification.permission === 'granted') {
+                                navigator.serviceWorker.ready.then(function (reg) {
+                                    reg.pushManager.getSubscription().then(function (sub) {
+                                        if (!sub && window.LapaktifikasiPWA) {
+                                            window.LapaktifikasiPWA.requestPush(true);
+                                        }
+                                    });
                                 });
-                            });
-                        }
-                    })
-                    .catch(function (err) {
-                        console.warn('[PWA] SW register info:', err);
-                    });
+                            }
+                        })
+                        .catch(function (err) {
+                            console.warn('[PWA] SW register info:', err);
+                        });
+                });
             });
         }
 
@@ -615,7 +626,12 @@
             }
         }
 
-        checkFirstTimePwaLaunch();
+        // Defer UI prompt check until idle
+        window.addEventListener('load', function () {
+            runWhenIdle(function () {
+                checkFirstTimePwaLaunch();
+            });
+        });
 
         // --- 6. Global LapaktifikasiPWA Object ---
         window.LapaktifikasiPWA = {
@@ -761,12 +777,6 @@
                     const ok = await this.requestPush();
                     if (!ok) return;
                     sub = await reg.pushManager.getSubscription();
-                }
-
-                if (!sub) return;
-                    const ok = await this.requestPush();
-                    if (!ok) return;
-                    sub = await swRegistration.pushManager.getSubscription();
                 }
 
                 if (!sub) return;

@@ -19,35 +19,8 @@ Artisan::command('inspire', function () {
 |--------------------------------------------------------------------------
 */
 
-Schedule::call(function () {
-    $expiredStok = StokAkun::where('status', StokStatus::RESERVED)
-        ->where('reserved_expired_at', '<', now())
-        ->get();
-
-    foreach ($expiredStok as $stok) {
-        DB::transaction(function () use ($stok) {
-            $id_pembelian = $stok->id_pembelian;
-
-            $stok->update([
-                'status' => StokStatus::TERSEDIA,
-                'reserved_at' => null,
-                'reserved_expired_at' => null,
-                'id_pembelian' => null,
-            ]);
-
-            if ($id_pembelian) {
-                $pembelian = Pembelian::where('id_pembelian', $id_pembelian)
-                    ->where('status', PembelianStatus::PENDING)
-                    ->first();
-                if ($pembelian) {
-                    Pembelian::$sumberPerubahan = 'scheduler_expired';
-                    $pembelian->update(['status' => PembelianStatus::EXPIRED]);
-                    Pembelian::$sumberPerubahan = null;
-                }
-            }
-        });
-    }
-})->everyMinute();
+// Batch auto-release expired reservations every minute with composite index support
+Schedule::command('app:release-expired-reservations')->everyMinute()->withoutOverlapping();
 
 Schedule::command('pakasir:expire-transactions')->everyFiveMinutes();
 Schedule::command('tripay:reconcile-transactions')->everyFiveMinutes();

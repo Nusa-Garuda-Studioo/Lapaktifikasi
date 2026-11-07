@@ -1,5 +1,6 @@
 /**
  * Core Interactive Scripts for Lapaktifikasi Landing / Public Pages
+ * Optimized for PageSpeed Insights (0 Forced Reflow, Decoupled rAF Scroll, Deferred Initializations)
  */
 
 (function () {
@@ -28,15 +29,29 @@
         document.body.style.overflow = '';
     };
 
-    // NAVBAR SCROLL HANDLER
-    const navbar = document.getElementById('navbar');
-    const handleNavbarScroll = function () {
-        if (navbar) {
-            navbar.classList.toggle('scrolled', window.scrollY > 40);
+    // SINGLE rAF BATCHED SCROLL HANDLER (Eliminates Forced Reflow)
+    let lastScrollY = 0;
+    let ticking = false;
+    let navbarEl = null;
+    let backToTopEl = null;
+
+    function updateScrollState() {
+        if (navbarEl) {
+            navbarEl.classList.toggle('scrolled', lastScrollY > 40);
         }
-    };
-    window.addEventListener('scroll', handleNavbarScroll, { passive: true });
-    handleNavbarScroll();
+        if (backToTopEl) {
+            backToTopEl.classList.toggle('visible', lastScrollY > 300);
+        }
+        ticking = false;
+    }
+
+    function onWindowScroll() {
+        lastScrollY = window.scrollY || window.pageYOffset;
+        if (!ticking) {
+            window.requestAnimationFrame(updateScrollState);
+            ticking = true;
+        }
+    }
 
     // AUTH LOGIN MODAL
     const tabLabels = {
@@ -119,25 +134,7 @@
         }
     };
 
-    // BACK TO TOP BUTTON
-    const initBackToTop = function () {
-        const btn = document.querySelector('.back-to-top');
-        if (!btn) return;
-
-        window.addEventListener('scroll', function () {
-            if (window.scrollY > 300) {
-                btn.classList.add('visible');
-            } else {
-                btn.classList.remove('visible');
-            }
-        }, { passive: true });
-
-        btn.addEventListener('click', function () {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-    };
-
-    // SCROLL REVEAL OBSERVER
+    // SCROLL REVEAL OBSERVER (Using IntersectionObserver)
     const initScrollReveal = function () {
         const reveals = document.querySelectorAll('.reveal');
         if (!reveals.length || !('IntersectionObserver' in window)) {
@@ -174,10 +171,37 @@
         });
     };
 
-    // INITIALIZATION
-    document.addEventListener('DOMContentLoaded', function () {
-        initBackToTop();
-        initScrollReveal();
-        initSmoothScroll();
-    });
+    // INITIALIZATION (Scheduled via requestIdleCallback for 0 TBT)
+    function init() {
+        navbarEl = document.getElementById('navbar');
+        backToTopEl = document.querySelector('.back-to-top');
+
+        if (backToTopEl) {
+            backToTopEl.addEventListener('click', function () {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+
+        window.addEventListener('scroll', onWindowScroll, { passive: true });
+        onWindowScroll();
+
+        // Defer non-critical listeners to idle time
+        if ('requestIdleCallback' in window) {
+            window.requestIdleCallback(function () {
+                initScrollReveal();
+                initSmoothScroll();
+            });
+        } else {
+            setTimeout(function () {
+                initScrollReveal();
+                initSmoothScroll();
+            }, 300);
+        }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
 })();

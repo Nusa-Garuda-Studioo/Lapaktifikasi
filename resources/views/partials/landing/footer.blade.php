@@ -19,6 +19,7 @@
                 <a href="{{ url('/') }}" class="nav-logo">
                     @if(isset($websiteSettings) && $websiteSettings->logo_path)
                         <img src="{{ asset($websiteSettings->logo_path) }}" alt="{{ $siteName }}"
+                            width="42" height="42" loading="lazy" decoding="async"
                             style="max-height: 42px; margin-right: 8px; width: auto; object-fit: contain;">
                     @else
                         <div class="nav-logo-icon">L</div>

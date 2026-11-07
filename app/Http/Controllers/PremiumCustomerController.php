@@ -17,6 +17,9 @@ use App\Enums\PembelianStatus;
 use App\Enums\StokStatus;
 use App\Services\PaymentProcessingService;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class PremiumCustomerController extends Controller
 {
@@ -79,16 +82,35 @@ class PremiumCustomerController extends Controller
         ])
             ->get();
 
-        // Calculate available stock for each variation
+        // Calculate available stock for each variation (Single batch query to eliminate N+1)
+        $allVarianIds = [];
+        foreach ($produk as $prod) {
+            if ($prod->tipe_produk !== 'digital') {
+                foreach ($prod->tipeLayanan as $tipe) {
+                    foreach ($tipe->varianLayanan as $varian) {
+                        $allVarianIds[] = $varian->id_varian;
+                    }
+                }
+            }
+        }
+
+        $stockCounts = [];
+        if (!empty($allVarianIds)) {
+            $stockCounts = StokAkun::whereIn('id_varian', $allVarianIds)
+                ->where('status', StokStatus::TERSEDIA)
+                ->groupBy('id_varian')
+                ->selectRaw('id_varian, count(*) as total')
+                ->pluck('total', 'id_varian')
+                ->toArray();
+        }
+
         foreach ($produk as $prod) {
             foreach ($prod->tipeLayanan as $tipe) {
                 foreach ($tipe->varianLayanan as $varian) {
                     if ($prod->tipe_produk === 'digital') {
                         $varian->stok_tersedia = 999;
                     } else {
-                        $varian->stok_tersedia = StokAkun::where('id_varian', $varian->id_varian)
-                            ->where('status', StokStatus::TERSEDIA)
-                            ->count();
+                        $varian->stok_tersedia = (int)($stockCounts[$varian->id_varian] ?? 0);
                     }
                 }
             }
@@ -180,17 +202,23 @@ class PremiumCustomerController extends Controller
             })->first();
         }
 
-        // 3. Fallback cerdas: Cocokkan dengan Str::slug() untuk produk yang memiliki tanda kurung atau simbol
+        // 3. Fallback cerdas: Cocokkan dengan Str::slug() secara lightweight tanpa eager-load seluruh tabel
         if (!$produk) {
-            $allActive = $baseQuery()->whereIn(\DB::raw('LOWER(status)'), ['aktif', 'active'])->get();
-            $targetSlug = \Illuminate\Support\Str::slug($product_slug);
-            foreach ($allActive as $item) {
-                $itemSlug = \Illuminate\Support\Str::slug($item->nama_produk);
-                $itemSlugWithId = $itemSlug . '-' . $item->id_produk;
+            $candidateProducts = Produk::select('id_produk', 'nama_produk')
+                ->whereIn('status', ['aktif', 'active'])
+                ->get();
+            $targetSlug = Str::slug($product_slug);
+            $foundId = null;
+            foreach ($candidateProducts as $candidate) {
+                $itemSlug = Str::slug($candidate->nama_produk);
+                $itemSlugWithId = $itemSlug . '-' . $candidate->id_produk;
                 if ($targetSlug === $itemSlug || $targetSlug === $itemSlugWithId || str_contains($targetSlug, $itemSlug) || str_contains($itemSlug, $targetSlug)) {
-                    $produk = $item;
+                    $foundId = $candidate->id_produk;
                     break;
                 }
+            }
+            if ($foundId) {
+                $produk = $baseQuery()->find($foundId);
             }
         }
 
@@ -305,7 +333,7 @@ class PremiumCustomerController extends Controller
             return redirect('/')->with('error', 'Profil pelanggan tidak ditemukan.');
         }
 
-        // Sinkronisasi dan auto-expire transaksi pending dalam 24 jam terakhir
+        // Sinkronisasi dan auto-expire transaksi pending dalam 24 jam terakhir (Ringan & Cepat)
         $pendingPurchases = Pembelian::where('id_customer', $customer->id)
             ->where('status', PembelianStatus::PENDING)
             ->where('created_at', '>=', now()->subHours(24))
@@ -313,31 +341,39 @@ class PremiumCustomerController extends Controller
 
         foreach ($pendingPurchases as $pPending) {
             $isExpiredByTime = $pPending->reserved_until && $pPending->reserved_until < now();
-            try {
-                $gatewayName = $pPending->payment_gateway ?? 'midtrans';
-                $gateway = \App\Services\Gateways\PaymentGatewayFactory::make($gatewayName);
-                $statusData = $gateway->verifyStatus($pPending->order_id, (int)$pPending->harga_saat_beli);
-
-                if ($statusData['status'] === PembelianStatus::SUCCESS) {
-                    $this->paymentProcessor->markAsSuccess($pPending, [
-                        'payment_type' => $statusData['payment_type'] ?? 'unknown',
-                        'payment_gateway' => $gatewayName,
-                        'gross_amount' => $statusData['gross_amount'] ?? $pPending->harga_saat_beli,
-                        'transaction_id' => $statusData['transaction_id'] ?? null,
-                    ]);
-                } elseif (in_array($statusData['status'], [PembelianStatus::FAILED, PembelianStatus::EXPIRED]) || $isExpiredByTime) {
-                    $this->paymentProcessor->markAsFailed($pPending, $statusData['status']->value ?? 'expire', $gatewayName);
-                }
-            } catch (\Exception $e) {
-                if ($isExpiredByTime) {
+            if ($isExpiredByTime) {
+                // Auto-expire langsung di database tanpa gateway HTTP call yang memblokir TTFB
+                try {
                     $this->paymentProcessor->markAsFailed($pPending, 'expire', $pPending->payment_gateway ?? 'system');
+                } catch (\Throwable $e) {}
+            } else {
+                // Cek status dengan cooldown cache 20 detik agar polling/refresh halaman tidak blocking
+                $cacheKey = 'verify_riwayat_order_' . $pPending->order_id;
+                if (!Cache::has($cacheKey)) {
+                    Cache::put($cacheKey, true, 20);
+                    try {
+                        $gatewayName = $pPending->payment_gateway ?? 'midtrans';
+                        $gateway = \App\Services\Gateways\PaymentGatewayFactory::make($gatewayName);
+                        $statusData = $gateway->verifyStatus($pPending->order_id, (int)$pPending->harga_saat_beli);
+
+                        if ($statusData['status'] === PembelianStatus::SUCCESS) {
+                            $this->paymentProcessor->markAsSuccess($pPending, [
+                                'payment_type' => $statusData['payment_type'] ?? 'unknown',
+                                'payment_gateway' => $gatewayName,
+                                'gross_amount' => $statusData['gross_amount'] ?? $pPending->harga_saat_beli,
+                                'transaction_id' => $statusData['transaction_id'] ?? null,
+                            ]);
+                        } elseif (in_array($statusData['status'], [PembelianStatus::FAILED, PembelianStatus::EXPIRED])) {
+                            $this->paymentProcessor->markAsFailed($pPending, $statusData['status']->value ?? 'expire', $gatewayName);
+                        }
+                    } catch (\Throwable $e) {}
                 }
             }
         }
 
         $startDateInput = $request->input('start_date');
         $endDateInput = $request->input('end_date');
-        
+
         $query = Pembelian::with(['varianLayanan.tipeLayanan.produk', 'pembayaran', 'review'])
             ->where('id_customer', $customer->id);
 
@@ -345,22 +381,22 @@ class PremiumCustomerController extends Controller
             try {
                 $startDate = \Illuminate\Support\Carbon::parse($startDateInput)->startOfDay();
                 $endDate = \Illuminate\Support\Carbon::parse($endDateInput)->endOfDay();
-                
+
                 if ($startDate->greaterThan($endDate)) {
                     return redirect()->back()->with('error', 'Tanggal mulai tidak boleh lebih besar dari tanggal akhir.');
                 }
-                
+
                 if ($startDate->diffInDays($endDate) > 365) {
                     return redirect()->back()->with('error', 'Rentang tanggal maksimal adalah 1 tahun.');
                 }
-                
+
                 $query->whereBetween('created_at', [$startDate, $endDate]);
             } catch (\Exception $e) {
                 return redirect()->back()->with('error', 'Format tanggal tidak valid.');
             }
         }
 
-        $pembelian = $query->orderBy('created_at', 'desc')->get();
+        $pembelian = $query->orderBy('created_at', 'desc')->paginate(15)->withQueryString();
 
         return view('premium_customer.riwayat', compact('pembelian'));
     }

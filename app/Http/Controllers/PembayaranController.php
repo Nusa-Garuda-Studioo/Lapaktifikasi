@@ -402,30 +402,46 @@ class PembayaranController extends Controller
 
     public function statusApi(string $order_id)
     {
-        // 1. Sinkronisasi status dengan server Midtrans via API backend (polling-safe)
-        $this->syncTransactionStatus($order_id);
+        // 1. Query ringan data Pembelian (hanya kolom yang diperlukan, memanfaatkan index order_id)
+        $pembelian = \App\Models\Pembelian::select('id_pembelian', 'order_id', 'id_customer', 'status', 'updated_at')
+            ->where('order_id', $order_id)
+            ->first();
 
-        // 2. Query data Pembelian (Premium Account)
-        $pembelian = \App\Models\Pembelian::where('order_id', $order_id)->first();
         if ($pembelian) {
             try {
-                // Cek otorisasi kepemilikan transaksi dengan Policy yang ada
+                // Cek otorisasi kepemilikan transaksi dengan Policy
                 $this->authorize('view', $pembelian);
             } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
                 return response()->json(['error' => 'Unauthorized'], 403);
             }
 
+            // Jika status masih pending, sinkronkan dengan payment gateway (dengan cooldown)
+            $statusVal = strtolower($pembelian->status->value ?? $pembelian->status);
+            if ($statusVal === 'pending') {
+                $this->syncTransactionStatus($order_id);
+                $pembelian->refresh();
+                $statusVal = strtolower($pembelian->status->value ?? $pembelian->status);
+            }
+
             return response()->json([
-                'status' => strtolower($pembelian->status->value ?? $pembelian->status),
+                'status' => $statusVal,
                 'updated_at' => $pembelian->updated_at ? $pembelian->updated_at->toIso8601String() : null,
             ]);
         }
 
-        // 3. Fallback ke Legacy BeliProdukModel (Zip Product)
-        $beli_produk = BeliProdukModel::where('order_id', $order_id)->first();
+        // 2. Fallback ke Legacy BeliProdukModel (Zip Product)
+        $beli_produk = BeliProdukModel::select('id', 'order_id', 'user_id', 'status', 'tanggal_transaksi')
+            ->where('order_id', $order_id)
+            ->first();
+
         if ($beli_produk) {
             if ($beli_produk->user_id != auth()->id()) {
                 return response()->json(['error' => 'Unauthorized'], 403);
+            }
+
+            if (strtolower($beli_produk->status) !== 'success') {
+                $this->syncTransactionStatus($order_id, $beli_produk);
+                $beli_produk->refresh();
             }
 
             return response()->json([

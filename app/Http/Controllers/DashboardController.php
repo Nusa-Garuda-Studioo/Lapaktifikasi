@@ -53,8 +53,8 @@ class DashboardController extends Controller
 
     protected function getTotalPenjualanHariIni($hari_ini)
     {
-        // Legacy sales today
-        $legacySales = PembayaranModel::whereIn('order_id', BeliProdukModel::where('tanggal_transaksi', $hari_ini)->pluck('order_id'))->sum('total');
+        // Legacy sales today (subquery instead of pluck to save PHP memory)
+        $legacySales = PembayaranModel::whereIn('order_id', BeliProdukModel::where('tanggal_transaksi', $hari_ini)->select('order_id'))->sum('total');
 
         // Premium sales today
         $premiumSales = Pembayaran::whereDate('tanggal_bayar', $hari_ini)->sum('jumlah_dibayar');
@@ -187,11 +187,11 @@ class DashboardController extends Controller
         $total_order = $legacy_order + $premium_order;
 
         // 2. Total omzet dalam rentang tanggal (khusus toko ini)
-        $legacy_omzet = PembayaranModel::whereIn('order_id', 
+        $legacy_omzet = PembayaranModel::whereIn('order_id',
             BeliProdukModel::where('id_toko', $toko_id)
                 ->where('status', 'success')
                 ->whereBetween('tanggal_transaksi', [$startDateStr, $endDateStr])
-                ->pluck('order_id')
+                ->select('order_id')
         )->sum('total');
 
         $premium_omzet = Pembayaran::whereHas('pembelian.varianLayanan.tipeLayanan.produk', function ($query) use ($toko_id) {

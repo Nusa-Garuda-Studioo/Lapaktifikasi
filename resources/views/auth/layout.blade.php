@@ -414,7 +414,7 @@
                     <div class="auth-visual-frame">
                         <div class="auth-visual-top w-100">
                             <span class="badge-dark-custom">
-                                <i class="bi bi-shield-check text-warning"></i> Platform Marketplace & Digital
+                                <!-- <i class="bi bi-shield-check text-warning"></i> Platform Marketplace & Digital -->
                             </span>
                         </div>
 

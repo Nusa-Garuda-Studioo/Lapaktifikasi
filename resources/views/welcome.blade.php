@@ -5,8 +5,21 @@
 @section('meta_description', 'Platform marketplace produk digital, source code aplikasi, dan akun premium murah terpercaya. Pengiriman otomatis instan kurang dari 5 detik, bergaransi resmi, dan didukung payment gateway terpercaya.')
 @section('og_image', isset($websiteSettings) && $websiteSettings->logo_path ? asset($websiteSettings->logo_path) : asset('assets/img/brand_ambassador.jpg'))
 
+@push('preload')
+    <!-- High Priority Preload for LCP Hero Element -->
+    <link rel="preload" as="image" href="{{ asset('assets/img/heroatas-920.webp') }}"
+          imagesrcset="{{ asset('assets/img/heroatas-360.webp') }} 360w, {{ asset('assets/img/heroatas-640.webp') }} 640w, {{ asset('assets/img/heroatas-720.webp') }} 720w, {{ asset('assets/img/heroatas-920.webp') }} 920w"
+          imagesizes="(max-width: 575px) 320px, (max-width: 991px) 420px, 460px"
+          type="image/webp"
+          fetchpriority="high">
+@endpush
+
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('css/pages/welcome.css') }}?v={{ file_exists(public_path('css/pages/welcome.css')) ? filemtime(public_path('css/pages/welcome.css')) : time() }}">
+    <!-- Non-blocking Page Specific Stylesheet -->
+    <link rel="preload" href="{{ asset('css/pages/welcome.css') }}?v={{ file_exists(public_path('css/pages/welcome.css')) ? filemtime(public_path('css/pages/welcome.css')) : time() }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link rel="stylesheet" href="{{ asset('css/pages/welcome.css') }}?v={{ file_exists(public_path('css/pages/welcome.css')) ? filemtime(public_path('css/pages/welcome.css')) : time() }}">
+    </noscript>
 @endpush
 
 @push('schema')
@@ -111,14 +124,25 @@
             <div class="hero-visual" style="flex: 0 0 auto; max-width: 480px; width: 100%; margin: 0; display: flex; justify-content: center; align-items: center;">
                 <div class="hero-img-wrapper" style="position: relative; width: 100%; max-width: 460px; aspect-ratio: 4 / 5; display: flex; align-items: center; justify-content: center; animation: none;">
                     <div class="hero-img-glow"></div>
-                    <img src="{{ asset('assets/img/heroatas.png') }}" 
-                         alt="{{ isset($websiteSettings) && $websiteSettings->site_name ? $websiteSettings->site_name : 'Lapaktifikasi' }} - Produk Digital & Akun Premium" 
-                         class="hero-banner-img"
-                         width="460"
-                         height="575"
-                         style="width: 100%; height: auto; max-height: 575px; aspect-ratio: 4 / 5; object-fit: contain; display: block; pointer-events: none; transform: none; transition: none;"
-                         loading="eager"
-                         fetchpriority="high">
+                    <picture>
+                        @if(file_exists(public_path('assets/img/heroatas-920.avif')))
+                            <source type="image/avif"
+                                    srcset="{{ asset('assets/img/heroatas-360.avif') }} 360w, {{ asset('assets/img/heroatas-640.avif') }} 640w, {{ asset('assets/img/heroatas-920.avif') }} 920w"
+                                    sizes="(max-width: 575px) 320px, (max-width: 991px) 420px, 460px">
+                        @endif
+                        <source type="image/webp"
+                                srcset="{{ asset('assets/img/heroatas-360.webp') }} 360w, {{ asset('assets/img/heroatas-640.webp') }} 640w, {{ asset('assets/img/heroatas-720.webp') }} 720w, {{ asset('assets/img/heroatas-920.webp') }} 920w"
+                                sizes="(max-width: 575px) 320px, (max-width: 991px) 420px, 460px">
+                        <img src="{{ file_exists(public_path('assets/img/heroatas-fallback.png')) ? asset('assets/img/heroatas-fallback.png') : asset('assets/img/heroatas.png') }}"
+                             alt="{{ isset($websiteSettings) && $websiteSettings->site_name ? $websiteSettings->site_name : 'Lapaktifikasi' }} - Produk Digital & Akun Premium"
+                             class="hero-banner-img"
+                             width="460"
+                             height="575"
+                             style="width: 100%; height: auto; max-height: 575px; aspect-ratio: 4 / 5; object-fit: contain; display: block; pointer-events: none; transform: none; transition: none;"
+                             loading="eager"
+                             fetchpriority="high"
+                             decoding="async">
+                    </picture>
                 </div>
             </div>
         </div>
@@ -163,7 +187,20 @@
                 <div class="marquee-content">
                     @foreach($mitras as $mitra)
                         <div class="mitra-card">
-                            <img src="{{ asset($mitra->image_path) }}" alt="{{ $mitra->name }}">
+                            @php
+                                $mitraWebp = preg_replace('/\.(png|PNG|jpg|jpeg)$/', '.webp', $mitra->image_path);
+                            @endphp
+                            <picture>
+                                @if(file_exists(public_path($mitraWebp)))
+                                    <source srcset="{{ asset($mitraWebp) }}" type="image/webp">
+                                @endif
+                                <img src="{{ asset($mitra->image_path) }}"
+                                     alt="{{ $mitra->name }}"
+                                     width="140"
+                                     height="50"
+                                     loading="lazy"
+                                     decoding="async">
+                            </picture>
                         </div>
                     @endforeach
                 </div>
@@ -171,7 +208,20 @@
                 <div class="marquee-content">
                     @foreach($mitras as $mitra)
                         <div class="mitra-card">
-                            <img src="{{ asset($mitra->image_path) }}" alt="{{ $mitra->name }}">
+                            @php
+                                $mitraWebp = preg_replace('/\.(png|PNG|jpg|jpeg)$/', '.webp', $mitra->image_path);
+                            @endphp
+                            <picture>
+                                @if(file_exists(public_path($mitraWebp)))
+                                    <source srcset="{{ asset($mitraWebp) }}" type="image/webp">
+                                @endif
+                                <img src="{{ asset($mitra->image_path) }}"
+                                     alt="{{ $mitra->name }}"
+                                     width="140"
+                                     height="50"
+                                     loading="lazy"
+                                     decoding="async">
+                            </picture>
                         </div>
                     @endforeach
                 </div>
@@ -249,9 +299,23 @@
                             $visiLogo = (isset($websiteSettings) && $websiteSettings->visi_logo_path && file_exists(public_path($websiteSettings->visi_logo_path)))
                                 ? asset($websiteSettings->visi_logo_path)
                                 : asset('assets/img/visi_kami.svg');
+                            $visiWebp = (isset($websiteSettings) && $websiteSettings->visi_logo_path)
+                                ? preg_replace('/\.(png|PNG|jpg|jpeg)$/', '.webp', $websiteSettings->visi_logo_path)
+                                : null;
                         @endphp
                         <div class="vm-logo-wrap" style="width: 170px; height: 170px; display: flex; align-items: center; justify-content: center;">
-                            <img src="{{ $visiLogo }}" alt="Visi Kami" style="max-width: 160px; max-height: 160px; object-fit: contain; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.05));">
+                            <picture>
+                                @if($visiWebp && file_exists(public_path($visiWebp)))
+                                    <source srcset="{{ asset($visiWebp) }}" type="image/webp">
+                                @endif
+                                <img src="{{ $visiLogo }}"
+                                     alt="Visi Kami"
+                                     width="160"
+                                     height="160"
+                                     loading="lazy"
+                                     decoding="async"
+                                     style="max-width: 160px; max-height: 160px; object-fit: contain; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.05));">
+                            </picture>
                         </div>
                         <h3 class="vm-default-title" style="font-family: 'Space Grotesk', sans-serif; font-size: 1.65rem; font-weight: 800; color: #000000; margin-top: 14px;">Visi Kami</h3>
                     </div>
@@ -277,9 +341,23 @@
                             $misiLogo = (isset($websiteSettings) && $websiteSettings->misi_logo_path && file_exists(public_path($websiteSettings->misi_logo_path)))
                                 ? asset($websiteSettings->misi_logo_path)
                                 : asset('assets/img/misi_utama.svg');
+                            $misiWebp = (isset($websiteSettings) && $websiteSettings->misi_logo_path)
+                                ? preg_replace('/\.(png|PNG|jpg|jpeg)$/', '.webp', $websiteSettings->misi_logo_path)
+                                : null;
                         @endphp
                         <div class="vm-logo-wrap" style="width: 170px; height: 170px; display: flex; align-items: center; justify-content: center;">
-                            <img src="{{ $misiLogo }}" alt="Misi Utama" style="max-width: 150px; max-height: 175px; object-fit: contain; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.05));">
+                            <picture>
+                                @if($misiWebp && file_exists(public_path($misiWebp)))
+                                    <source srcset="{{ asset($misiWebp) }}" type="image/webp">
+                                @endif
+                                <img src="{{ $misiLogo }}"
+                                     alt="Misi Utama"
+                                     width="150"
+                                     height="175"
+                                     loading="lazy"
+                                     decoding="async"
+                                     style="max-width: 150px; max-height: 175px; object-fit: contain; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.05));">
+                            </picture>
                         </div>
                         <h3 class="vm-default-title" style="font-family: 'Space Grotesk', sans-serif; font-size: 1.65rem; font-weight: 800; color: #000000; margin-top: 14px;">Misi Utama</h3>
                     </div>
@@ -364,8 +442,19 @@
             </div>
             <div class="products-grid">
                 <div class="glass-card product-card reveal">
-                    <div class="product-card-icon"><img src="https://cdn-icons-png.flaticon.com/512/1005/1005141.png"
-                            alt="Source Code"></div>
+                    <div class="product-card-icon">
+                        <picture>
+                            @if(file_exists(public_path('assets/img/categories/source-code.webp')))
+                                <source srcset="{{ asset('assets/img/categories/source-code.webp') }}" type="image/webp">
+                            @endif
+                            <img src="{{ file_exists(public_path('assets/img/categories/source-code.png')) ? asset('assets/img/categories/source-code.png') : 'https://cdn-icons-png.flaticon.com/512/1005/1005141.png' }}"
+                                alt="Source Code"
+                                width="36"
+                                height="36"
+                                loading="lazy"
+                                decoding="async">
+                        </picture>
+                    </div>
                     <h3>Source Code &amp; ZIP File</h3>
                     <p>Script web, project laravel/php, source code absensi, template, &amp; modul siap pakai dalam
                         format ZIP/RAR.</p>
@@ -376,8 +465,19 @@
                     </div>
                 </div>
                 <div class="glass-card product-card reveal" style="transition-delay:.1s">
-                    <div class="product-card-icon"><img src="https://cdn-icons-png.flaticon.com/512/3670/3670157.png"
-                            alt="Spotify & Netflix"></div>
+                    <div class="product-card-icon">
+                        <picture>
+                            @if(file_exists(public_path('assets/img/categories/spotify-netflix.webp')))
+                                <source srcset="{{ asset('assets/img/categories/spotify-netflix.webp') }}" type="image/webp">
+                            @endif
+                            <img src="{{ file_exists(public_path('assets/img/categories/spotify-netflix.png')) ? asset('assets/img/categories/spotify-netflix.png') : 'https://cdn-icons-png.flaticon.com/512/3670/3670157.png' }}"
+                                alt="Spotify & Netflix"
+                                width="36"
+                                height="36"
+                                loading="lazy"
+                                decoding="async">
+                        </picture>
+                    </div>
                     <h3>Spotify &amp; Netflix Premium</h3>
                     <p>Nikmati akses streaming musik tanpa iklan dan film 4K Ultra HD dengan harga ramah kantong.</p>
                     <div class="product-card-footer">
@@ -388,8 +488,19 @@
                     </div>
                 </div>
                 <div class="glass-card product-card reveal" style="transition-delay:.2s">
-                    <div class="product-card-icon"><img src="https://cdn-icons-png.flaticon.com/512/2970/2970785.png"
-                            alt="Gambar & Desain Grafis"></div>
+                    <div class="product-card-icon">
+                        <picture>
+                            @if(file_exists(public_path('assets/img/categories/desain-grafis.webp')))
+                                <source srcset="{{ asset('assets/img/categories/desain-grafis.webp') }}" type="image/webp">
+                            @endif
+                            <img src="{{ file_exists(public_path('assets/img/categories/desain-grafis.png')) ? asset('assets/img/categories/desain-grafis.png') : 'https://cdn-icons-png.flaticon.com/512/2970/2970785.png' }}"
+                                alt="Gambar & Desain Grafis"
+                                width="36"
+                                height="36"
+                                loading="lazy"
+                                decoding="async">
+                        </picture>
+                    </div>
                     <h3>Gambar &amp; Desain Grafis</h3>
                     <p>Elemen desain, template Canva/Photoshop, ilustrasi, foto, dan aset grafis berkualitas tinggi
                     untuk kebutuhan konten.</p>
@@ -401,8 +512,19 @@
                     </div>
                 </div>
                 <div class="glass-card product-card reveal" style="transition-delay:.3s">
-                    <div class="product-card-icon"><img src="https://cdn-icons-png.flaticon.com/512/2991/2991106.png"
-                            alt="Dokumen & Notepad"></div>
+                    <div class="product-card-icon">
+                        <picture>
+                            @if(file_exists(public_path('assets/img/categories/dokumen.webp')))
+                                <source srcset="{{ asset('assets/img/categories/dokumen.webp') }}" type="image/webp">
+                            @endif
+                            <img src="{{ file_exists(public_path('assets/img/categories/dokumen.png')) ? asset('assets/img/categories/dokumen.png') : 'https://cdn-icons-png.flaticon.com/512/2991/2991106.png' }}"
+                                alt="Dokumen & Notepad"
+                                width="36"
+                                height="36"
+                                loading="lazy"
+                                decoding="async">
+                        </picture>
+                    </div>
                     <h3>Dokumen &amp; Notepad (TXT)</h3>
                     <p>Modul pembelajaran, catatan penting, daftar prompt AI, &amp; script text yang dapat diakses
                         langsung setelah order.</p>
@@ -414,8 +536,19 @@
                     </div>
                 </div>
                 <div class="glass-card product-card reveal" style="transition-delay:.4s">
-                    <div class="product-card-icon"><img src="https://cdn-icons-png.flaticon.com/512/2232/2232688.png"
-                            alt="E-Book & Modul Edukasi"></div>
+                    <div class="product-card-icon">
+                        <picture>
+                            @if(file_exists(public_path('assets/img/categories/ebook.webp')))
+                                <source srcset="{{ asset('assets/img/categories/ebook.webp') }}" type="image/webp">
+                            @endif
+                            <img src="{{ file_exists(public_path('assets/img/categories/ebook.png')) ? asset('assets/img/categories/ebook.png') : 'https://cdn-icons-png.flaticon.com/512/2232/2232688.png' }}"
+                                alt="E-Book & Modul Edukasi"
+                                width="36"
+                                height="36"
+                                loading="lazy"
+                                decoding="async">
+                        </picture>
+                    </div>
                     <h3>E-Book &amp; Modul Edukasi</h3>
                     <p>Panduan praktis, e-book teknologi, strategi bisnis digital, hingga materi pengembangan karir profesional.</p>
                     <div class="product-card-footer">
@@ -425,8 +558,19 @@
                     </div>
                 </div>
                 <div class="glass-card product-card reveal" style="transition-delay:.5s">
-                    <div class="product-card-icon"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
-                            alt="Karya Kreator & Developer"></div>
+                    <div class="product-card-icon">
+                        <picture>
+                            @if(file_exists(public_path('assets/img/categories/creator.webp')))
+                                <source srcset="{{ asset('assets/img/categories/creator.webp') }}" type="image/webp">
+                            @endif
+                            <img src="{{ file_exists(public_path('assets/img/categories/creator.png')) ? asset('assets/img/categories/creator.png') : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png' }}"
+                                alt="Karya Kreator & Developer"
+                                width="36"
+                                height="36"
+                                loading="lazy"
+                                decoding="async">
+                        </picture>
+                    </div>
                     <h3>Karya Kreator &amp; Developer</h3>
                     <p>Dukung inovasi dan karya digital para kreator independen serta developer berbakat dengan membeli aset dan source code pilihan.</p>
                     <div class="product-card-footer">

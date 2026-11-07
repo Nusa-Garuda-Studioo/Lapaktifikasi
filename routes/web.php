@@ -42,16 +42,21 @@ use Illuminate\Support\Str;
 
 use App\Models\MitraIndustri;
 use App\Models\Testimoni;
+use Illuminate\Support\Facades\Cache;
 
 Route::get('/', function () {
     try {
-        $mitras = MitraIndustri::where('is_active', true)->orderBy('id', 'desc')->get();
+        $mitras = Cache::remember('landing_mitras', 3600, function () {
+            return MitraIndustri::where('is_active', true)->orderBy('id', 'desc')->get();
+        });
     } catch (\Throwable $e) {
         $mitras = collect();
     }
 
     try {
-        $testimonis = Testimoni::where('is_active', true)->orderBy('id', 'desc')->get();
+        $testimonis = Cache::remember('landing_testimonis', 3600, function () {
+            return Testimoni::where('is_active', true)->orderBy('id', 'desc')->get();
+        });
     } catch (\Throwable $e) {
         $testimonis = collect();
     }
@@ -64,14 +69,40 @@ Route::get('/banned', function () {
 })->name('banned.page');
 
 Route::get('/daftar-jadi-seller', function () {
-    $mitras = MitraIndustri::where('is_active', true)->orderBy('id', 'desc')->get();
-    $testimonis = Testimoni::where('is_active', true)->orderBy('id', 'desc')->get();
+    try {
+        $mitras = Cache::remember('landing_mitras', 3600, function () {
+            return MitraIndustri::where('is_active', true)->orderBy('id', 'desc')->get();
+        });
+    } catch (\Throwable $e) {
+        $mitras = collect();
+    }
+
+    try {
+        $testimonis = Cache::remember('landing_testimonis', 3600, function () {
+            return Testimoni::where('is_active', true)->orderBy('id', 'desc')->get();
+        });
+    } catch (\Throwable $e) {
+        $testimonis = collect();
+    }
     return view('daftar_seller', compact('mitras', 'testimonis'));
 })->name('daftar.seller');
 
 Route::get('/join-partner', function () {
-    $mitras = MitraIndustri::where('is_active', true)->orderBy('id', 'desc')->get();
-    $testimonis = Testimoni::where('is_active', true)->orderBy('id', 'desc')->get();
+    try {
+        $mitras = Cache::remember('landing_mitras', 3600, function () {
+            return MitraIndustri::where('is_active', true)->orderBy('id', 'desc')->get();
+        });
+    } catch (\Throwable $e) {
+        $mitras = collect();
+    }
+
+    try {
+        $testimonis = Cache::remember('landing_testimonis', 3600, function () {
+            return Testimoni::where('is_active', true)->orderBy('id', 'desc')->get();
+        });
+    } catch (\Throwable $e) {
+        $testimonis = collect();
+    }
     return view('join_partner', compact('mitras', 'testimonis'));
 })->name('join.partner');
 

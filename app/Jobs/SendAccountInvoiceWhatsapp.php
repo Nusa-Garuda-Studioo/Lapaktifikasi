@@ -22,6 +22,8 @@ class SendAccountInvoiceWhatsapp implements ShouldQueue
 
     public int $backoff = 20;
 
+    public int $timeout = 30;
+
     public function __construct(
         public int $idPembelian
     ) {

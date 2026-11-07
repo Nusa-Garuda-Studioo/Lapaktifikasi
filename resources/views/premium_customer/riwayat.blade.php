@@ -233,6 +233,12 @@
                             Anda belum memiliki transaksi pembelian akun premium.
                         </div>
                         @endforelse
+
+                        @if(method_exists($pembelian, 'hasPages') && $pembelian->hasPages())
+                        <div class="d-flex justify-content-center mt-4 pt-2">
+                            {{ $pembelian->links() }}
+                        </div>
+                        @endif
                     </div>
                 </div>
             </div>

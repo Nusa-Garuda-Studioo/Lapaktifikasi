@@ -1,19 +1,14 @@
-const CACHE_NAME = 'lapaktifikasi-pwa-v2';
+const CACHE_NAME = 'lapaktifikasi-pwa-v3';
 const OFFLINE_URL = '/offline';
 
+// Minimal critical precache to prevent delaying first visit on Slow 4G
 const PRECACHE_ASSETS = [
     OFFLINE_URL,
-    '/manifest.json',
     '/assets/img/favicon.png',
-    '/assets/img/pwa/icon-192x192.png',
-    '/assets/img/pwa/icon-512x512.png',
-    '/assets/img/pwa/shortcut-katalog.png',
-    '/assets/img/pwa/shortcut-riwayat.png',
-    '/assets/img/pwa/shortcut-mitra.png',
-    '/assets/img/pwa/shortcut-bantuan.png'
+    '/assets/img/pwa/icon-192x192.png'
 ];
 
-// 1. Install Event: Pre-cache offline page and core assets
+// 1. Install Event: Pre-cache core offline assets only
 self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
@@ -31,7 +26,7 @@ self.addEventListener('activate', (event) => {
             return Promise.all(
                 cacheNames.map((cache) => {
                     if (cache !== CACHE_NAME) {
-                        console.log('[PWA SW] Removing old cache:', cache);
+                        console.log('[PWA SW] Purging old cache version:', cache);
                         return caches.delete(cache);
                     }
                 })
@@ -40,23 +35,29 @@ self.addEventListener('activate', (event) => {
     );
 });
 
-// 3. Fetch Event: Smart routing & offline fallback
+// 3. Fetch Event: Multi-tier caching strategy
 self.addEventListener('fetch', (event) => {
     const request = event.request;
     const url = new URL(request.url);
 
-    // Skip non-GET requests (POST, PUT, DELETE should never be cached)
+    // Skip non-GET requests (POST, PUT, DELETE should never be intercepted)
     if (request.method !== 'GET') {
         return;
     }
 
-    // Skip dynamic APIs, payment gateways, admin mutation routes, webpush APIs, and chrome extensions
+    // Never intercept or cache sw.js and manifest.json (Guarantees instant PWA updates)
+    if (url.pathname === '/sw.js' || url.pathname === '/manifest.json') {
+        return;
+    }
+
+    // Skip dynamic APIs, payment gateways, admin mutation routes, webpush, and extensions
     if (
         url.pathname.startsWith('/api/') ||
         url.pathname.startsWith('/webpush/') ||
         url.pathname.startsWith('/metode_pembayaran/') ||
         url.pathname.startsWith('/admin/') ||
         url.pathname.startsWith('/seller/mutasi') ||
+        url.pathname.startsWith('/livewire/') ||
         url.origin.includes('midtrans') ||
         url.origin.includes('tripay') ||
         url.origin.includes('pakasir') ||
@@ -65,12 +66,12 @@ self.addEventListener('fetch', (event) => {
         return;
     }
 
-    // A. Navigation / HTML requests (Pages)
+    // A. Navigation / HTML Requests (Network-First with Offline Fallback)
     if (request.mode === 'navigate' || (request.headers.get('accept') && request.headers.get('accept').includes('text/html'))) {
         event.respondWith(
             fetch(request)
                 .then((networkResponse) => {
-                    // Cache successful page visit for offline reading
+                    // Only cache successful public GET requests (skip redirects or auth-gated errors)
                     if (networkResponse && networkResponse.status === 200) {
                         const responseClone = networkResponse.clone();
                         caches.open(CACHE_NAME).then((cache) => {
@@ -80,14 +81,14 @@ self.addEventListener('fetch', (event) => {
                     return networkResponse;
                 })
                 .catch(async () => {
-                    // Network failed: Try to return cached version of this page
+                    // Network failed: Serve cached copy of the page if available
                     const cachedResponse = await caches.match(request);
                     if (cachedResponse) {
                         return cachedResponse;
                     }
-                    // If page not cached, show custom friendly Offline screen
+                    // Fallback to custom offline view
                     const offlineFallback = await caches.match(OFFLINE_URL);
-                    return offlineFallback || new Response('Koneksi internet terputus. Silakan periksa jaringan Anda.', {
+                    return offlineFallback || new Response('Koneksi terputus. Silakan periksa jaringan Anda.', {
                         headers: { 'Content-Type': 'text/plain; charset=utf-8' }
                     });
                 })
@@ -95,7 +96,29 @@ self.addEventListener('fetch', (event) => {
         return;
     }
 
-    // B. Static Assets (CSS, JS, Fonts, Images): Stale-While-Revalidate
+    // B. Vite Hashed Assets (/build/*): Cache-First (Immutable)
+    // Filename hash ensures content uniqueness forever. If in cache, return instantly.
+    if (url.pathname.startsWith('/build/')) {
+        event.respondWith(
+            caches.match(request).then((cachedResponse) => {
+                if (cachedResponse) {
+                    return cachedResponse;
+                }
+                return fetch(request).then((networkResponse) => {
+                    if (networkResponse && networkResponse.status === 200) {
+                        const responseClone = networkResponse.clone();
+                        caches.open(CACHE_NAME).then((cache) => {
+                            cache.put(request, responseClone);
+                        });
+                    }
+                    return networkResponse;
+                });
+            })
+        );
+        return;
+    }
+
+    // C. Static Unhashed Assets (/assets/*, /css/*, fonts, images): Stale-While-Revalidate
     if (
         request.destination === 'style' ||
         request.destination === 'script' ||
@@ -115,7 +138,7 @@ self.addEventListener('fetch', (event) => {
                     }
                     return networkResponse;
                 }).catch(() => {
-                    // Silently fail fetch if offline, cached response will handle it
+                    // Offline fallback handled by cached response
                 });
 
                 return cachedResponse || fetchPromise;
@@ -124,13 +147,13 @@ self.addEventListener('fetch', (event) => {
         return;
     }
 
-    // Default fallback to network
+    // Default network fallback
     event.respondWith(
         fetch(request).catch(() => caches.match(request))
     );
 });
 
-// 4. Message Event: Skip waiting if instructed
+// 4. Message Event: Skip waiting when new version ready
 self.addEventListener('message', (event) => {
     if (event.data && event.data.type === 'SKIP_WAITING') {
         self.skipWaiting();
@@ -200,4 +223,3 @@ self.addEventListener('notificationclick', (event) => {
         })
     );
 });
-

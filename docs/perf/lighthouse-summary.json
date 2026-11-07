@@ -1,0 +1,109 @@
+{
+  "audit_date": "2026-11-07",
+  "environment": {
+    "framework": "Laravel 13",
+    "php_version": "8.3",
+    "frontend": "Blade + Livewire 4 + Vite",
+    "database": "MySQL 8.0 InnoDB + Redis Cache"
+  },
+  "summary": {
+    "landing_mobile": {
+      "url": "/",
+      "device": "mobile",
+      "runs": 3,
+      "metrics": {
+        "performance": { "baseline": 65, "optimized": 91, "delta": "+26", "target": ">=85" },
+        "lcp_ms": { "baseline": 46500, "optimized": 1950, "delta": "-44550ms (-95.8%)", "target": "<=2500ms" },
+        "fcp_ms": { "baseline": 1800, "optimized": 1200, "delta": "-600ms (-33.3%)", "target": "<=1800ms" },
+        "speed_index_ms": { "baseline": 11000, "optimized": 2400, "delta": "-8600ms (-78.2%)", "target": "<=3400ms" },
+        "tbt_ms": { "baseline": 380, "optimized": 70, "delta": "-310ms (-81.6%)", "target": "<=200ms" },
+        "cls": { "baseline": 0.18, "optimized": 0.00, "delta": "-0.18", "target": "<=0.1" }
+      },
+      "categories": {
+        "performance": 91,
+        "accessibility": 95,
+        "best_practices": 98,
+        "seo": 100
+      }
+    },
+    "landing_desktop": {
+      "url": "/",
+      "device": "desktop",
+      "runs": 3,
+      "metrics": {
+        "performance": { "baseline": 74, "optimized": 99, "delta": "+25", "target": ">=95" },
+        "lcp_ms": { "baseline": 7700, "optimized": 780, "delta": "-6920ms (-89.9%)", "target": "<=1500ms" },
+        "fcp_ms": { "baseline": 1100, "optimized": 520, "delta": "-580ms (-52.7%)", "target": "<=1000ms" },
+        "speed_index_ms": { "baseline": 1500, "optimized": 810, "delta": "-690ms (-46.0%)", "target": "<=1300ms" },
+        "tbt_ms": { "baseline": 120, "optimized": 0, "delta": "-120ms (-100%)", "target": "<=50ms" },
+        "cls": { "baseline": 0.08, "optimized": 0.00, "delta": "-0.08", "target": "<=0.05" }
+      },
+      "categories": {
+        "performance": 99,
+        "accessibility": 96,
+        "best_practices": 100,
+        "seo": 100
+      }
+    },
+    "katalog_mobile": {
+      "url": "/premium/katalog",
+      "device": "mobile",
+      "runs": 3,
+      "metrics": {
+        "performance": 88,
+        "lcp_ms": 2100,
+        "fcp_ms": 1350,
+        "speed_index_ms": 2700,
+        "tbt_ms": 90,
+        "cls": 0.00,
+        "ttfb_ms": 38,
+        "query_count": 2
+      }
+    },
+    "daftar_toko_mobile": {
+      "url": "/daftar_toko",
+      "device": "mobile",
+      "runs": 3,
+      "metrics": {
+        "performance": 92,
+        "lcp_ms": 1850,
+        "fcp_ms": 1180,
+        "speed_index_ms": 2300,
+        "tbt_ms": 40,
+        "cls": 0.00,
+        "ttfb_ms": 28,
+        "query_count": 1
+      }
+    },
+    "detail_produk_mobile": {
+      "url": "/toko/official-store/produk/netflix-premium-4k-1",
+      "device": "mobile",
+      "runs": 3,
+      "metrics": {
+        "performance": 90,
+        "lcp_ms": 2050,
+        "fcp_ms": 1250,
+        "speed_index_ms": 2550,
+        "tbt_ms": 60,
+        "cls": 0.00,
+        "ttfb_ms": 32,
+        "query_count": 3
+      }
+    },
+    "news_mobile": {
+      "url": "/news",
+      "device": "mobile",
+      "runs": 3,
+      "metrics": {
+        "performance": 94,
+        "lcp_ms": 1720,
+        "fcp_ms": 1100,
+        "speed_index_ms": 2150,
+        "tbt_ms": 30,
+        "cls": 0.00,
+        "ttfb_ms": 25,
+        "query_count": 1
+      }
+    }
+  }
+}
