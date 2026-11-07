@@ -4,7 +4,7 @@
    Contains: Variables, Resets, Navbar, Hero, Stats, Blobs
    ======================================================== */
 
-/* 1. Font Fallbacks with size-adjust to eliminate CLS */
+/* 1. Font Fallbacks with size-adjust ton eliminate CLS */
 @font-face {
     font-family: 'Plus Jakarta Sans Fallback';
     src: local('Arial'), local('Helvetica');
